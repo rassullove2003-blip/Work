@@ -1,0 +1,12 @@
+{
+  "name": "uniitalia",
+  "private": true,
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "mobile": "npm run start -w mobile",
+    "admin": "npm run dev -w admin",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "seed:sql": "tsx scripts/generate-seed-sql.ts",
+    "test:db": "bash scripts/test-db.sh"
+  }
+}

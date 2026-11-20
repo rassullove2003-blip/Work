@@ -1,0 +1,17 @@
+[
+  {"slug":"laziodisco","organization":"DiSCo Lazio (LazioDiSCo)","name_ru":"Региональная стипендия DSU — Лацио","region":"lazio","website":"https://www.laziodisco.it","universities":["sapienza","tor-vergata","roma-tre","unicas"]},
+  {"slug":"edisu-piemonte","organization":"EDISU Piemonte","name_ru":"Региональная стипендия DSU — Пьемонт","region":"piedmont","website":"https://www.edisu.piemonte.it","universities":["unito","polito"]},
+  {"slug":"dsu-toscana","organization":"DSU Toscana","name_ru":"Региональная стипендия DSU — Тоскана","region":"tuscany","website":"https://www.dsu.toscana.it","universities":["unipi","unifi","unisi"]},
+  {"slug":"ergo","organization":"ER.GO — Azienda Regionale per il Diritto agli Studi Superiori","name_ru":"Региональная стипендия DSU — Эмилия-Романья","region":"emilia-romagna","website":"https://www.er-go.it","universities":["unibo","unipr","unimore","unife"]},
+  {"slug":"esu-padova","organization":"ESU Padova","name_ru":"Стипендия DSU — Падуя (Венето)","region":"veneto","website":"https://www.esupd.gov.it","universities":["unipd"]},
+  {"slug":"esu-venezia","organization":"ESU Venezia","name_ru":"Стипендия DSU — Венеция (Венето)","region":"veneto","website":"https://www.esuvenezia.it","universities":["unive","iuav"]},
+  {"slug":"esu-verona","organization":"ESU Verona","name_ru":"Стипендия DSU — Верона (Венето)","region":"veneto","website":"https://www.esu.vr.it","universities":["univr"]},
+  {"slug":"ersu-palermo","organization":"ERSU Palermo","name_ru":"Стипендия DSU — Палермо (Сицилия)","region":"sicily","website":"https://www.ersupalermo.it","universities":["unipa"]},
+  {"slug":"ersu-messina","organization":"ERSU Messina","name_ru":"Стипендия DSU — Мессина (Сицилия)","region":"sicily","website":"https://www.ersumessina.it","universities":["unime"]},
+  {"slug":"ersu-catania","organization":"ERSU Catania","name_ru":"Стипендия DSU — Катания (Сицилия)","region":"sicily","website":"https://www.ersucatania.it","universities":["unict"]},
+  {"slug":"adisu-puglia","organization":"ADISU Puglia","name_ru":"Региональная стипендия DSU — Апулия","region":"apulia","website":"https://www.adisupuglia.it","universities":["uniba"]},
+  {"slug":"adisurc","organization":"ADISURC — Diritto allo Studio Universitario Regione Campania","name_ru":"Региональная стипендия DSU — Кампания","region":"campania","website":"https://www.adisurcampania.it","universities":["unina","unisa"]},
+  {"slug":"opera-trento","organization":"Opera Universitaria di Trento","name_ru":"Стипендия DSU — Тренто","region":"trentino-alto-adige","website":"https://www.operauni.tn.it","universities":["unitn"]},
+  {"slug":"aliseo","organization":"ALiSEO — Agenzia Ligure per gli Studenti e l'Orientamento","name_ru":"Региональная стипендия DSU — Лигурия","region":"liguria","website":"https://www.aliseo.liguria.it","universities":["unige"]},
+  {"slug":"adisu-umbria","organization":"ADiSU Umbria","name_ru":"Региональная стипендия DSU — Умбрия","region":"umbria","website":"https://www.adisu.umbria.it","universities":["unipg"]}
+]
