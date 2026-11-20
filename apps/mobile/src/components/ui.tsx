@@ -204,6 +204,8 @@ export function ErrorState({ onRetry, details }: { onRetry: () => void; details?
 
 /* --------------------------------------------------------- DeadlineBadge -- */
 export function DeadlineBadge({ date, verified }: { date: string | null; verified: boolean }) {
+  // момент первого рендера; не вызываем Date.now() при каждом рендере
+  const [now] = React.useState(() => Date.now());
   if (!date) {
     return (
       <View style={[styles.badge, { backgroundColor: colors.surface }]}>
@@ -213,7 +215,7 @@ export function DeadlineBadge({ date, verified }: { date: string | null; verifie
     );
   }
   const d = new Date(date);
-  const days = Math.ceil((d.getTime() - Date.now()) / 86400000);
+  const days = Math.ceil((d.getTime() - now) / 86400000);
   const urgent = days >= 0 && days <= 14;
   return (
     <View style={[styles.badge, { backgroundColor: urgent ? colors.warningSoft : colors.successSoft }]}>

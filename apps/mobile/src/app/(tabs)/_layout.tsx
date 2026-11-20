@@ -6,10 +6,15 @@ import { t } from '../../i18n';
 
 type IconName = React.ComponentProps<typeof Ionicons>['name'];
 
+function TabIcon({ name, active, color, focused }: { name: IconName; active: IconName; color: ColorValue; focused: boolean }) {
+  return <Ionicons name={focused ? active : name} size={22} color={color as string} />;
+}
+
 function icon(name: IconName, active: IconName) {
-  return ({ color, focused }: { color: ColorValue; focused: boolean }) => (
-    <Ionicons name={focused ? active : name} size={22} color={color as string} />
-  );
+  function Icon(props: { color: ColorValue; focused: boolean }) {
+    return <TabIcon name={name} active={active} {...props} />;
+  }
+  return Icon;
 }
 
 export default function TabLayout() {

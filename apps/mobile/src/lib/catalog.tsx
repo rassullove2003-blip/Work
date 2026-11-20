@@ -89,7 +89,6 @@ export function CatalogProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (source === 'local') return;
     let cancelled = false;
-    setStatus('loading');
     loadFromSupabase()
       .then((d) => {
         if (cancelled) return;
@@ -121,7 +120,10 @@ export function CatalogProvider({ children }: { children: React.ReactNode }) {
       scholarships: data.scholarships,
       hasDemoData:
         data.universities.some((u) => u.is_demo) || programs.some((p) => p.is_demo) || data.scholarships.some((s) => s.is_demo),
-      reload: () => setAttempt((n) => n + 1),
+      reload: () => {
+        setStatus('loading');
+        setAttempt((n) => n + 1);
+      },
       universityBySlug: (slug) => uniBySlug.get(slug),
       programBySlug: (slug) => progBySlug.get(slug),
       scholarshipBySlug: (slug) => schBySlug.get(slug),

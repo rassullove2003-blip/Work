@@ -1,0 +1,46 @@
+:root {
+  --primary: #00b8d9; --blue: #0066ff; --bg: #ffffff; --surface: #f5f7fa; --border: #e3e8ef;
+  --text: #172b4d; --muted: #5e6c84; --success: #00c896; --warning: #ffb020; --danger: #e5484d;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; background: var(--surface); color: var(--text); }
+a { color: var(--blue); }
+h1 { font-size: 24px; margin: 0 0 16px; } h2 { font-size: 18px; margin: 24px 0 12px; }
+code { background: var(--surface); padding: 1px 4px; border-radius: 4px; }
+.container { max-width: 1100px; margin: 0 auto; padding: 24px 16px 64px; }
+.topbar { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; padding: 12px 24px; background: var(--bg); border-bottom: 1px solid var(--border); }
+.topbar nav { display: flex; gap: 4px; flex: 1; flex-wrap: wrap; }
+.topbar nav a { padding: 8px 12px; border-radius: 999px; text-decoration: none; color: var(--text); font-weight: 600; }
+.topbar nav a.active { background: var(--text); color: #fff; }
+.brand { font-size: 18px; } .brand span { color: var(--primary); }
+.card { background: var(--bg); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
+.narrow { max-width: 440px; margin: 40px auto; display: flex; flex-direction: column; gap: 12px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+label, fieldset { display: flex; flex-direction: column; gap: 6px; font-weight: 600; font-size: 14px; }
+.wide { grid-column: 1 / -1; }
+fieldset { border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
+.checks { display: flex; flex-wrap: wrap; gap: 8px 16px; }
+label.check { flex-direction: row; align-items: center; gap: 8px; font-weight: 500; }
+input, select, textarea { font: inherit; font-weight: 400; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 10px; background: #fff; color: var(--text); }
+input:focus, select:focus, textarea:focus { outline: 2px solid var(--primary); border-color: var(--primary); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 40px; padding: 8px 18px; border-radius: 999px; border: 1.5px solid var(--blue); background: #fff; color: var(--blue); font: inherit; font-weight: 700; cursor: pointer; text-decoration: none; }
+.btn.primary { background: var(--blue); color: #fff; }
+.btn.danger { border-color: var(--danger); color: var(--danger); }
+.btn.small { min-height: 32px; padding: 4px 12px; font-size: 14px; }
+.btn:disabled { opacity: .5; cursor: default; }
+.row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 16px; }
+.row.between { justify-content: space-between; margin-top: 0; }
+.muted { color: var(--muted); } .small { font-size: 13px; }
+.error { color: var(--danger); font-weight: 600; } .success { color: #00805f; font-weight: 600; }
+.warning { background: #fff5e0; color: #7a5200; padding: 12px; border-radius: 10px; }
+table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 12px; overflow: hidden; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 14px; vertical-align: top; }
+th { background: var(--surface); font-size: 12px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); }
+.table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; }
+.badge { display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 6px; background: var(--surface); }
+.badge.published { background: #e0f9f2; color: #00805f; } .badge.draft { background: #fff5e0; color: #7a5200; }
+.badge.verified { background: #e0f9f2; color: #00805f; } .badge.outdated { background: #fdecec; color: var(--danger); }
+.stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+.stat b { display: block; font-size: 32px; }
+.toolbar { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; align-items: center; }
+.toolbar input { flex: 1; min-width: 220px; }
