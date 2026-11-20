@@ -1,8 +1,10 @@
 'use client';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
-const url = process.env.NEXT_PUBLIC_SUPABASE_URL ?? '';
-const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? '';
+import project from '../../../supabase/project.json';
+
+const url = process.env.NEXT_PUBLIC_SUPABASE_URL || project.url;
+const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || project.publishableKey;
 
 export const isConfigured = /^https:\/\//.test(url) && key.length > 20;
 

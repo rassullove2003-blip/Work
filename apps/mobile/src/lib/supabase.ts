@@ -3,8 +3,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { Platform } from 'react-native';
 
-const url = process.env.EXPO_PUBLIC_SUPABASE_URL ?? '';
-const anonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? '';
+import project from '../../../../supabase/project.json';
+
+// Переменные окружения имеют приоритет; иначе — публичные параметры проекта из supabase/project.json.
+// Чтобы запустить демо-режим без сервера, задайте EXPO_PUBLIC_SUPABASE_URL=offline.
+const envUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
+const url = envUrl === 'offline' ? '' : envUrl || project.url;
+const anonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY || project.publishableKey;
 
 /** true, если заданы переменные окружения Supabase. Иначе приложение работает в демо-режиме. */
 export const isSupabaseConfigured = /^https:\/\//.test(url) && anonKey.length > 20;

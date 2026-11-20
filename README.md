@@ -31,6 +31,12 @@ docs/               Архитектура, источники данных, с�
 Почему **Expo Router**: файловая маршрутизация, встроенные глубокие ссылки
 (`uniitalia://university/unibo`, `uniitalia://program/polimi-cse`), одна кодовая база для iOS, Android и веба.
 
+## Подключённый проект Supabase
+
+Приложение и админка уже подключены к проекту `App` (`hpokcnafharcoxsyzowp`, регион eu-west-1):
+публичные URL и ключ лежат в `supabase/project.json`. Миграции и демо-данные применены (40 вузов, 25 программ, 15 стипендий).
+Демо-режим без сервера: `EXPO_PUBLIC_SUPABASE_URL=offline npm run mobile`.
+
 ## Что работает в Этапе 1
 
 | Функция | Статус |
@@ -177,6 +183,6 @@ npm test -w @uniitalia/shared        # юнит-тесты поиска, фил�
 npm run typecheck                    # TypeScript во всех пакетах
 npm run test:db                      # миграции + seed + RLS на временном PostgreSQL (нужен PostgreSQL 15+)
 npm run seed:sql                     # пересобрать supabase/seed.sql из packages/shared/data
-cd apps/mobile && npm run export:web && NODE_PATH=$(npm root -g) node e2e/smoke.mjs   # e2e (нужен Playwright)
+cd apps/mobile && EXPO_PUBLIC_SUPABASE_URL=offline npm run export:web && NODE_PATH=$(npm root -g) node e2e/smoke.mjs   # e2e (нужен Playwright)
 npm run build -w admin               # сборка админ-панели
 ```

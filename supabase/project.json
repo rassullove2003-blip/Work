@@ -1,0 +1,6 @@
+{
+  "comment": "Публичные параметры проекта Supabase (не секрет: доступ ограничен RLS). service_role/secret ключи сюда не добавлять.",
+  "projectRef": "hpokcnafharcoxsyzowp",
+  "url": "https://hpokcnafharcoxsyzowp.supabase.co",
+  "publishableKey": "sb_publishable_s7cdKzhpkE8ypkcSWxo4Cw_6Nj9HUIv"
+}
