@@ -30,7 +30,15 @@
     "plugins": [
       "expo-router",
       "expo-web-browser",
-      "expo-font"
+      "expo-font",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "UniItalia использует доступ к фото, чтобы сотрудники могли загружать фотографии и логотипы университетов.",
+          "cameraPermission": false,
+          "microphonePermission": false
+        }
+      ]
     ],
     "scheme": "uniitalia",
     "experiments": {

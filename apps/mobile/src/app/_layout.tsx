@@ -5,12 +5,14 @@ import { CatalogProvider } from '../lib/catalog';
 import { AuthProvider } from '../lib/auth';
 import { FavoritesProvider } from '../lib/favorites';
 import { FiltersProvider } from '../lib/filters';
+import { StaffProvider } from '../lib/staff';
 import { colors } from '../theme';
 
 export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <AuthProvider>
+        <StaffProvider>
         <CatalogProvider>
           <FavoritesProvider>
             <FiltersProvider>
@@ -23,6 +25,7 @@ export default function RootLayout() {
             </FiltersProvider>
           </FavoritesProvider>
         </CatalogProvider>
+        </StaffProvider>
       </AuthProvider>
     </SafeAreaProvider>
   );

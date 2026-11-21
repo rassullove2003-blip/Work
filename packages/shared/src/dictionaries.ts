@@ -197,3 +197,16 @@ export const DSU_FAQ: { q: string; a: string }[] = [
     a: 'В Ломбардии стипендии DSU, как правило, выдают сами университеты. Ищите раздел «Diritto allo studio» на сайте вашего университета.',
   },
 ];
+
+export const APPLICANT_CATEGORIES: Record<import('./types').ApplicantCategory, string> = {
+  all: 'Все абитуриенты',
+  eu: 'Граждане EU',
+  non_eu_in_italy: 'Non-EU, проживающие в Италии',
+  non_eu_abroad: 'Non-EU, проживающие за рубежом',
+};
+
+export const ROLE_LABELS: Record<'admin' | 'curator' | 'student', string> = {
+  admin: 'Администратор',
+  curator: 'Куратор',
+  student: 'Студент',
+};

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { cityName, regionName, UNIVERSITY_TYPES } from '@uniitalia/shared';
 import { useCatalog } from '../../lib/catalog';
@@ -38,6 +38,9 @@ export default function UniversityScreen() {
     <View style={ui.screen}>
       <ScreenHeader title={title} back right={<FavoriteButton kind="university" id={u.id} label={title} />} />
       <ScrollView contentContainerStyle={ui.content}>
+        {u.image_url ? (
+          <Image source={{ uri: u.image_url }} style={styles.photo} resizeMode="cover" accessibilityLabel={`Фото: ${title}`} />
+        ) : null}
         <View style={[ui.card, { gap: spacing.sm }]}>
           <View style={[ui.row, { gap: spacing.md, alignItems: 'flex-start' }]}>
             <UniversityAvatar university={u} size={72} />
@@ -124,4 +127,5 @@ export default function UniversityScreen() {
 
 const styles = StyleSheet.create({
   meta: { ...font.bodyBold, color: colors.text },
+  photo: { width: '100%', height: 200, borderRadius: 16, marginBottom: spacing.md, backgroundColor: colors.border },
 });

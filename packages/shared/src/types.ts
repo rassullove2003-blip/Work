@@ -72,3 +72,22 @@ export interface Scholarship extends VerificationMeta {
 export interface ProgramWithUniversity extends Program {
   university: University;
 }
+
+export type ApplicantCategory = 'all' | 'eu' | 'non_eu_in_italy' | 'non_eu_abroad';
+
+export interface Deadline {
+  id: string;
+  program_id: string | null;
+  scholarship_id: string | null;
+  academic_year: string;
+  applicant_category: ApplicantCategory;
+  title_ru: string;
+  starts_at: string | null;
+  ends_at: string;
+  timezone: string;
+  verification_status: VerificationStatus;
+  verified_at: string | null;
+  source_url: string | null;
+}
+
+export type StaffRole = 'admin' | 'curator';

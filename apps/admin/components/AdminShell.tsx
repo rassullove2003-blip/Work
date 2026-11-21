@@ -46,7 +46,7 @@ function LoginForm() {
       <button className="btn primary" disabled={busy}>
         {busy ? 'Вход…' : 'Войти'}
       </button>
-      <p className="muted">Доступ только для администраторов и редакторов. Роль назначает администратор — см. README.</p>
+      <p className="muted">Доступ только для администраторов и кураторов. Роль назначает администратор — см. README.</p>
     </form>
   );
 }
@@ -111,7 +111,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
       <main className="container">
         <div className="card narrow">
           <h1>Нет доступа</h1>
-          <p>Аккаунт {session.user.email} не является администратором или редактором.</p>
+          <p>Аккаунт {session.user.email} не является администратором или куратором.</p>
           <button className="btn" onClick={() => supabase!.auth.signOut()}>
             Выйти
           </button>
@@ -141,7 +141,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
           ))}
         </nav>
         <span className="muted small">
-          {session.user.email} · {role === 'admin' ? 'администратор' : 'редактор'}
+          {session.user.email} · {role === 'admin' ? 'администратор' : 'куратор'}
         </span>
         <button className="btn small" onClick={() => supabase!.auth.signOut()}>
           Выйти

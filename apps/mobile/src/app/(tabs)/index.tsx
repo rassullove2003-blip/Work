@@ -8,6 +8,7 @@ import { useCatalog } from '../../lib/catalog';
 import { useFilters } from '../../lib/filters';
 import { EmptyState, ErrorState, FilterChip, LoadingState, Logo, Notice, SearchInput, Section, ui, type IconName } from '../../components/ui';
 import { ScholarshipCard, UniversityCard } from '../../components/cards';
+import { DeadlineCard, upcoming } from '../../components/DeadlineCard';
 import { colors, font, radius, spacing } from '../../theme';
 import { t } from '../../i18n';
 
@@ -172,10 +173,14 @@ export default function HomeScreen() {
           </ScrollView>
         </Section>
 
-        <Section title={s.home.deadlines}>
-          <View style={ui.card}>
-            <EmptyState icon="calendar-outline" title={s.home.noDeadlinesTitle} text={s.home.noDeadlinesText} />
-          </View>
+        <Section title={s.home.deadlines} action={{ title: s.common.showAll, onPress: () => router.push('/deadlines') }}>
+          {upcoming(catalog.deadlines, true, 3).length ? (
+            upcoming(catalog.deadlines, true, 3).map((d) => <DeadlineCard key={d.id} deadline={d} />)
+          ) : (
+            <View style={ui.card}>
+              <EmptyState icon="calendar-outline" title={s.home.noDeadlinesTitle} text={s.home.noDeadlinesText} />
+            </View>
+          )}
         </Section>
       </View>
     </ScrollView>

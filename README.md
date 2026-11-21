@@ -185,4 +185,6 @@ npm run test:db                      # миграции + seed + RLS на вре
 npm run seed:sql                     # пересобрать supabase/seed.sql из packages/shared/data
 cd apps/mobile && EXPO_PUBLIC_SUPABASE_URL=offline npm run export:web && NODE_PATH=$(npm root -g) node e2e/smoke.mjs   # e2e (нужен Playwright)
 npm run build -w admin               # сборка админ-панели
+# e2e админки на живой базе (создаёт и удаляет записи QA):
+cd apps/mobile && npm run export:web && QA_EMAIL=… QA_PASSWORD=… NODE_PATH=$(npm root -g) node e2e/admin-live.mjs
 ```

@@ -4,6 +4,8 @@ import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Constants from 'expo-constants';
 import { useAuth, type StudentProfile } from '../../lib/auth';
+import { useStaff } from '../../lib/staff';
+import { ROLE_LABELS } from '@uniitalia/shared';
 import { confirmAction, notify } from '../../lib/links';
 import { Button, EmptyState, FormField, LoadingState, Notice, Section, ui } from '../../components/ui';
 import { colors, spacing } from '../../theme';
@@ -84,6 +86,7 @@ export default function ProfileScreen() {
   const s = t();
   const insets = useSafeAreaInsets();
   const auth = useAuth();
+  const staff = useStaff();
 
   const doExport = async () => {
     try {
@@ -125,7 +128,19 @@ export default function ProfileScreen() {
         </View>
       ) : (
         <>
-          <Text style={[ui.muted, { marginTop: spacing.xs }]}>{auth.email}</Text>
+          <Text style={[ui.muted, { marginTop: spacing.xs }]}>
+            {auth.email} · {ROLE_LABELS[staff.role ?? 'student']}
+          </Text>
+          {staff.isStaff ? (
+            <Button
+              title="Управление"
+              icon="construct-outline"
+              variant="secondary"
+              onPress={() => router.push('/admin' as never)}
+              style={{ marginTop: spacing.lg }}
+              testID="open-admin"
+            />
+          ) : null}
           <Section title="Мои данные">
             <ProfileForm />
           </Section>

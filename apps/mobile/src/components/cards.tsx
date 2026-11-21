@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { router } from 'expo-router';
 import {
@@ -28,6 +28,17 @@ function initials(u: University): string {
 
 /** Пока нет лицензированных изображений, показываем цветную плашку с инициалами. */
 export function UniversityAvatar({ university, size = 56 }: { university: University; size?: number }) {
+  if (university.logo_url) {
+    return (
+      <Image
+        source={{ uri: university.logo_url }}
+        style={{ width: size, height: size, borderRadius: size * 0.25, backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: colors.border }}
+        resizeMode="contain"
+        accessibilityIgnoresInvertColors
+        accessibilityElementsHidden
+      />
+    );
+  }
   const color = AVATAR_COLORS[[...university.slug].reduce((a, c) => a + c.charCodeAt(0), 0) % AVATAR_COLORS.length];
   return (
     <View

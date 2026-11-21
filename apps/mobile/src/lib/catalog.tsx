@@ -3,6 +3,7 @@ import {
   seedPrograms,
   seedScholarships,
   seedUniversities,
+  type Deadline,
   type Program,
   type ProgramWithUniversity,
   type Scholarship,
@@ -19,6 +20,8 @@ interface CatalogState {
   universities: University[];
   programs: ProgramWithUniversity[];
   scholarships: Scholarship[];
+  /** Опубликованные сроки (проверенные и непроверенные — статус показывается в интерфейсе). */
+  deadlines: Deadline[];
   /** true, если в каталоге есть хотя бы одна демонстрационная запись. */
   hasDemoData: boolean;
   reload: () => void;
@@ -27,6 +30,7 @@ interface CatalogState {
   scholarshipBySlug: (slug: string) => Scholarship | undefined;
   programsOfUniversity: (universityId: string) => ProgramWithUniversity[];
   scholarshipsOfUniversity: (universityId: string) => Scholarship[];
+  deadlinesOfProgram: (programId: string) => Deadline[];
 }
 
 const CatalogContext = createContext<CatalogState | null>(null);
@@ -47,13 +51,14 @@ type ProgramCatalogRow = Omit<Program, 'tuition_fee_min_eur' | 'tuition_fee_max_
 
 async function loadFromSupabase() {
   if (!supabase) throw new Error('Supabase не настроен');
-  const [u, p, s, us] = await Promise.all([
+  const [u, p, s, us, d] = await Promise.all([
     supabase.from('universities').select('*').eq('status', 'published'),
     supabase.from('program_catalog').select('*').eq('status', 'published'),
     supabase.from('scholarships').select('*').eq('status', 'published'),
     supabase.from('university_scholarships').select('university_id, scholarship_id'),
+    supabase.from('admission_deadlines').select('*').eq('status', 'published').order('ends_at'),
   ]);
-  const err = u.error ?? p.error ?? s.error ?? us.error;
+  const err = u.error ?? p.error ?? s.error ?? us.error ?? d.error;
   if (err) throw new Error(err.message);
 
   const universities = (u.data ?? []) as University[];
@@ -72,7 +77,8 @@ async function loadFromSupabase() {
     ...sch,
     university_ids: links.filter((l) => l.scholarship_id === sch.id).map((l) => l.university_id),
   }));
-  return { universities, programs, scholarships };
+  const deadlines = (d.data ?? []) as Deadline[];
+  return { universities, programs, scholarships, deadlines };
 }
 
 export function CatalogProvider({ children }: { children: React.ReactNode }) {
@@ -81,8 +87,8 @@ export function CatalogProvider({ children }: { children: React.ReactNode }) {
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState(() =>
     source === 'local'
-      ? { universities: seedUniversities, programs: seedPrograms, scholarships: seedScholarships }
-      : { universities: [] as University[], programs: [] as Program[], scholarships: [] as Scholarship[] },
+      ? { universities: seedUniversities, programs: seedPrograms, scholarships: seedScholarships, deadlines: [] as Deadline[] }
+      : { universities: [] as University[], programs: [] as Program[], scholarships: [] as Scholarship[], deadlines: [] as Deadline[] },
   );
   const [attempt, setAttempt] = useState(0);
 
@@ -118,6 +124,7 @@ export function CatalogProvider({ children }: { children: React.ReactNode }) {
       universities: data.universities,
       programs,
       scholarships: data.scholarships,
+      deadlines: data.deadlines,
       hasDemoData:
         data.universities.some((u) => u.is_demo) || programs.some((p) => p.is_demo) || data.scholarships.some((s) => s.is_demo),
       reload: () => {
@@ -129,6 +136,7 @@ export function CatalogProvider({ children }: { children: React.ReactNode }) {
       scholarshipBySlug: (slug) => schBySlug.get(slug),
       programsOfUniversity: (id) => programs.filter((p) => p.university_id === id),
       scholarshipsOfUniversity: (id) => data.scholarships.filter((s) => s.university_ids.includes(id)),
+      deadlinesOfProgram: (id) => data.deadlines.filter((d) => d.program_id === id),
     };
   }, [data, status, source, error]);
 

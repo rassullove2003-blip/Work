@@ -15,7 +15,7 @@ export const isConfigured = /^https:\/\//.test(url) && key.length > 20;
  */
 export const supabase: SupabaseClient | null = isConfigured ? createClient(url, key) : null;
 
-export type StaffRole = 'admin' | 'editor';
+export type StaffRole = 'admin' | 'curator';
 
 export function errorRu(message: string): string {
   const m = message.toLowerCase();
