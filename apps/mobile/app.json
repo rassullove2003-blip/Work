@@ -35,6 +35,18 @@
     "scheme": "uniitalia",
     "experiments": {
       "typedRoutes": false
+    },
+    "owner": "mdtbkal",
+    "extra": {
+      "eas": {
+        "projectId": "fdc50a38-0db4-40f6-ab88-04b70bb18ea5"
+      }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/fdc50a38-0db4-40f6-ab88-04b70bb18ea5"
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
     }
   }
 }

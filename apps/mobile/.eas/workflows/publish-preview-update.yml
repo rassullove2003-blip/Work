@@ -1,0 +1,14 @@
+# Публикует обновление приложения на канал "preview" при каждом push.
+# Его можно открыть в Expo Go через QR-код на expo.dev (раздел Updates).
+name: Publish preview update
+
+on:
+  push:
+    branches: ['*']
+
+jobs:
+  publish_preview_update:
+    name: Publish preview update
+    type: update
+    params:
+      branch: preview
