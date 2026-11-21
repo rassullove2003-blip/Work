@@ -46,6 +46,7 @@ export function EditScreen({
   withVerification = true,
   extraValidate,
   footer,
+  newNotice,
 }: {
   table: string;
   id: string; // 'new' — создание
@@ -55,6 +56,8 @@ export function EditScreen({
   withVerification?: boolean;
   extraValidate?: (v: Values) => Record<string, string>;
   footer?: (savedId: string) => React.ReactNode;
+  /** Подсказка при создании новой записи. */
+  newNotice?: string;
 }) {
   const { isAdmin } = useStaff();
   const catalog = useCatalog();
@@ -140,6 +143,16 @@ export function EditScreen({
       <ScreenHeader title={isNew ? 'Новая запись' : 'Редактирование'} back />
       <ScrollView contentContainerStyle={ui.content} keyboardShouldPersistTaps="handled">
         <Text style={ui.h2}>{isNew ? 'Новая запись' : title(values) || 'Без названия'}</Text>
+        {isNew && newNotice ? (
+          <View style={{ marginTop: spacing.md }}>
+            <Notice text={newNotice} />
+          </View>
+        ) : null}
+        {!isNew && footer ? (
+          <View style={{ marginTop: spacing.md }}>
+            <Notice text="Ниже, под кнопкой «Сохранить», — дополнительные разделы этой записи." />
+          </View>
+        ) : null}
         <FormSection title="Основное">
           {fields.map((f) => (
             <Field key={f.name} f={f} value={values[f.name]} onChange={set(f.name)} error={errors[f.name]} />

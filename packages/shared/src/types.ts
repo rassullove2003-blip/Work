@@ -91,3 +91,18 @@ export interface Deadline {
 }
 
 export type StaffRole = 'admin' | 'curator';
+
+export type RequirementType = 'language' | 'diploma' | 'exam' | 'document' | 'other';
+
+export interface Requirement {
+  id: string;
+  program_id: string;
+  academic_year: string;
+  applicant_category: ApplicantCategory;
+  requirement_type: RequirementType;
+  title_ru: string;
+  details_ru: string | null;
+  verification_status: VerificationStatus;
+  verified_at: string | null;
+  source_url: string | null;
+}

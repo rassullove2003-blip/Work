@@ -210,3 +210,12 @@ export const ROLE_LABELS: Record<'admin' | 'curator' | 'student', string> = {
   curator: 'Куратор',
   student: 'Студент',
 };
+
+/** Типы требований и их подписи — в порядке показа на странице программы. */
+export const REQUIREMENT_TYPES: Record<import('./types').RequirementType, string> = {
+  diploma: 'Образование (аттестат, диплом)',
+  language: 'Языковые сертификаты',
+  exam: 'Вступительные испытания',
+  document: 'Документы',
+  other: 'Другое',
+};

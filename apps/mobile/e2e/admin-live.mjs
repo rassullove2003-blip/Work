@@ -107,6 +107,20 @@ await step('Создание программы и стоимости по го�
   await shot('05-program-fees');
 });
 
+await step('Требования к поступлению в программе', async () => {
+  // на странице программы: [0] основная форма, [1] требования, [2] стоимость
+  await id('req-save').waitFor();
+  await id('opt-requirement_type-language').click();
+  await id('opt-applicant_category-non_eu_abroad').first().click();
+  await id('input-academic_year').nth(1).fill('2026/2027');
+  await id('input-title_ru').nth(1).fill('IELTS 6.0 или эквивалент');
+  await id('input-details_ru').fill('Принимаются TOEFL iBT 80 и Cambridge B2.');
+  await id('opt-status-published').nth(1).click();
+  await id('req-save').click();
+  await vis('Языковые сертификаты · Non-EU, проживающие за рубежом · 2026/2027').waitFor();
+  await shot('05b-requirements');
+});
+
 await step('Создание проверенного дедлайна', async () => {
   await page.goto(`${base}/admin/deadline/new`);
   await id('input-title_ru').fill('QA срок подачи');
@@ -132,6 +146,8 @@ await step('Студенческая часть видит изменения: �
   if (!logos) throw new Error('загруженный логотип не показан');
   await page.goto(`${base}/program/qa-test-program`);
   await page.getByText(/1\s000 € в год/).locator('visible=true').first().waitFor();
+  await vis('IELTS 6.0 или эквивалент').waitFor();
+  await vis('ЯЗЫКОВЫЕ СЕРТИФИКАТЫ').waitFor();
   await vis('QA срок подачи').waitFor();
   await shot('07-program-public');
 });

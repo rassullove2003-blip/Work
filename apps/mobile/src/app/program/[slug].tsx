@@ -9,6 +9,7 @@ import { openOfficial } from '../../lib/links';
 import { Button, EmptyState, ErrorState, InfoRow, LoadingState, Notice, ScreenHeader, Section, SourceNote, ui, VerificationBadge } from '../../components/ui';
 import { FavoriteButton, ScholarshipCard, UniversityAvatar } from '../../components/cards';
 import { DeadlineCard } from '../../components/DeadlineCard';
+import { RequirementsView } from '../../components/RequirementsView';
 import { colors, spacing } from '../../theme';
 import { t } from '../../i18n';
 
@@ -101,15 +102,7 @@ export default function ProgramScreen() {
         </Section>
 
         <Section title={s.program.requirements}>
-          <View style={ui.card}>
-            <InfoRow label={s.program.euNonEu} value={unknown} muted />
-            <InfoRow label={s.program.exams} value={unknown} muted />
-            <InfoRow label={s.program.certificates} value={unknown} muted />
-            <InfoRow label={s.program.documents} value={unknown} muted />
-          </View>
-          <View style={{ marginTop: spacing.md }}>
-            <Notice text="Отсутствие данных о требованиях не означает, что их нет. Проверяйте условия для своей категории (EU / non-EU) на официальном сайте." />
-          </View>
+          <RequirementsView requirements={catalog.requirementsOfProgram(p.id)} />
         </Section>
 
         <Section title={s.program.deadlines}>

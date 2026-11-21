@@ -2,6 +2,7 @@ import React from 'react';
 import { useLocalSearchParams } from 'expo-router';
 import { EditScreen, StaffGuard } from '../../../components/admin/EditScreen';
 import { EditionsPanel } from '../../../components/admin/EditionsPanel';
+import { RequirementsPanel } from '../../../components/admin/RequirementsPanel';
 import { programDefaults, programFields, SLUG_RE } from '../../../components/admin/fields';
 import { useOptions } from '../../../components/admin/useOptions';
 import { LoadingState } from '../../../components/ui';
@@ -21,7 +22,13 @@ export default function AdminProgramEdit() {
           defaults={programDefaults}
           title={(v) => String(v.title_original || '')}
           extraValidate={(v) => (v.slug && !SLUG_RE.test(String(v.slug).trim()) ? { slug: 'Только латиница, цифры и дефис' } : ({} as Record<string, string>))}
-          footer={(pid) => <EditionsPanel programId={pid} />}
+          footer={(pid) => (
+            <>
+              <RequirementsPanel programId={pid} />
+              <EditionsPanel programId={pid} />
+            </>
+          )}
+          newNotice="Требования к поступлению и стоимость по годам появятся ниже после первого сохранения программы."
         />
       )}
     </StaffGuard>
