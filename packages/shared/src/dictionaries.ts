@@ -63,6 +63,11 @@ export const REGIONS: Record<string, { ru: string; it: string }> = {
   calabria: { ru: 'Калабрия', it: 'Calabria' },
   'friuli-venezia-giulia': { ru: 'Фриули — Венеция-Джулия', it: 'Friuli-Venezia Giulia' },
   abruzzo: { ru: 'Абруццо', it: 'Abruzzo' },
+  marche: { ru: 'Марке', it: 'Marche' },
+  molise: { ru: 'Молизе', it: 'Molise' },
+  basilicata: { ru: 'Базиликата', it: 'Basilicata' },
+  sardinia: { ru: 'Сардиния', it: 'Sardegna' },
+  'aosta-valley': { ru: "Валле-д'Аоста", it: "Valle d'Aosta" },
 };
 
 export const LEVELS: Record<StudyLevel, { ru: string; it: string }> = {
@@ -123,8 +128,8 @@ export const VERIFICATION_LABELS: Record<VerificationStatus, string> = {
   outdated: 'Устарело',
 };
 
-export function cityName(id: string): string {
-  return CITIES.find((c) => c.id === id)?.ru ?? id;
+export function cityName(id: string, cityRu?: string | null): string {
+  return cityRu || CITIES.find((c) => c.id === id)?.ru || id;
 }
 
 export function regionName(id: string): string {

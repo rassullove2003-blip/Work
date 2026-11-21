@@ -53,7 +53,7 @@ export default function UniversityScreen() {
           </View>
           <View style={ui.wrap}>
             <Text style={styles.meta}>
-              {cityName(u.city)}, {regionName(u.region)} · {UNIVERSITY_TYPES[u.public_private]}
+              {cityName(u.city, u.city_ru)}, {regionName(u.region)} · {UNIVERSITY_TYPES[u.public_private]}
             </Text>
           </View>
           <VerificationBadge meta={u} />

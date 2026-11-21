@@ -101,7 +101,7 @@ export function UniversityCard({
         onPress={open}
         style={({ pressed }) => [styles.tile, shadow, pressed && styles.pressed]}
         accessibilityRole="button"
-        accessibilityLabel={`${title}, ${cityName(university.city)}`}
+        accessibilityLabel={`${title}, ${cityName(university.city, university.city_ru)}`}
         testID={`uni-tile-${university.slug}`}
       >
         <View style={styles.tileTop}>
@@ -112,7 +112,7 @@ export function UniversityCard({
           {title}
         </Text>
         <Text style={styles.muted} numberOfLines={1}>
-          {cityName(university.city)} · {UNIVERSITY_TYPES[university.public_private]}
+          {cityName(university.city, university.city_ru)} · {UNIVERSITY_TYPES[university.public_private]}
         </Text>
       </Pressable>
     );
@@ -123,7 +123,7 @@ export function UniversityCard({
       onPress={open}
       style={({ pressed }) => [styles.card, pressed && styles.pressed]}
       accessibilityRole="button"
-      accessibilityLabel={`${title}, ${cityName(university.city)}, ${UNIVERSITY_TYPES[university.public_private]}`}
+      accessibilityLabel={`${title}, ${cityName(university.city, university.city_ru)}, ${UNIVERSITY_TYPES[university.public_private]}`}
       testID={`uni-card-${university.slug}`}
     >
       <View style={styles.cardRow}>
@@ -137,7 +137,7 @@ export function UniversityCard({
         <FavoriteButton kind="university" id={university.id} label={title} />
       </View>
       <View style={styles.tags}>
-        <Tag text={`${cityName(university.city)}, ${regionName(university.region)}`} />
+        <Tag text={`${cityName(university.city, university.city_ru)}, ${regionName(university.region)}`} />
         <Tag text={UNIVERSITY_TYPES[university.public_private]} tone="blue" />
         {programCount ? <Tag text={`Программ: ${programCount}`} /> : null}
       </View>
@@ -176,7 +176,7 @@ export function ProgramCard({ program, showUniversity = true }: { program: Progr
         <View style={[styles.cardRow, { marginTop: spacing.sm }]}>
           <UniversityAvatar university={program.university} size={32} />
           <Text style={[styles.body, { flex: 1 }]} numberOfLines={2}>
-            {uniName} · {cityName(program.university.city)}
+            {uniName} · {cityName(program.university.city, program.university.city_ru)}
           </Text>
         </View>
       ) : null}

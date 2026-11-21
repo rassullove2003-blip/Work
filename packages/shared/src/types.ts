@@ -26,6 +26,8 @@ export interface University extends VerificationMeta {
   name_en: string | null;
   name_ru: string | null;
   city: string;
+  /** Русское название города, если его нет во встроенном справочнике. */
+  city_ru?: string | null;
   region: string;
   public_private: PublicPrivate;
   website: string | null;

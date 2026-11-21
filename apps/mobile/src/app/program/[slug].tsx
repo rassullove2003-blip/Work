@@ -92,7 +92,7 @@ export default function ProgramScreen() {
             <InfoRow label={s.program.level} value={`${LEVELS[p.level].ru} (${LEVELS[p.level].it})`} />
             <InfoRow label={s.program.duration} value={formatDuration(p)} />
             <InfoRow label={s.program.language} value={LANGUAGES[p.language]} />
-            <InfoRow label={s.program.city} value={cityName(u.city)} />
+            <InfoRow label={s.program.city} value={cityName(u.city, u.city_ru)} />
             <InfoRow label={s.program.fee} value={p.academic_year && fee !== unknown ? `${fee} (${s.program.feeYear(p.academic_year)})` : fee} muted={fee === unknown} />
             <InfoRow label={s.program.curriculum} value={p.curriculum_url ? p.curriculum_url.replace(/^https?:\/\//, '') : unknown} muted={!p.curriculum_url} />
           </View>
