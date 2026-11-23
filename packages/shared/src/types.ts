@@ -111,3 +111,16 @@ export interface Requirement {
   verified_at: string | null;
   source_url: string | null;
 }
+
+export type ApplicationStatus =
+  | 'choosing'
+  | 'collecting_documents'
+  | 'documents_ready'
+  | 'exam_registered'
+  | 'exam_passed'
+  | 'application_sent'
+  | 'awaiting_decision'
+  | 'admitted'
+  | 'visa_preparation'
+  | 'visa_received'
+  | 'completed';

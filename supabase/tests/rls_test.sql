@@ -131,6 +131,30 @@ reset role;
 select pg_temp.check((select country from public.student_profiles where user_id = '00000000-0000-0000-0000-00000000000a') = 'Казахстан', 'B не изменил профиль A');
 select pg_temp.check((select count(*) from public.saved_programs) = 1, 'B не удалил избранное A');
 
+
+-- Личный кабинет: заявки и задачи
+select pg_temp.as_user('00000000-0000-0000-0000-00000000000b');
+insert into public.student_applications (user_id, program_id, academic_year)
+  select auth.uid(), id, '2027/2028' from public.degree_programs where slug = 'unibo-economics-finance';
+insert into public.application_tasks (application_id, title) select id, 'Подготовить IELTS' from public.student_applications;
+update public.student_applications set status = 'collecting_documents', notes = 'моя заметка', curator_comment = 'подделка';
+select pg_temp.check((select curator_comment from public.student_applications) is null, 'студент не может писать комментарий куратора');
+select pg_temp.check((select count(*) from public.application_events) = 2, 'история статусов ведётся');
+select pg_temp.as_user('00000000-0000-0000-0000-00000000000a');
+select pg_temp.check((select count(*) from public.student_applications) = 0, 'другой студент не видит чужие заявки');
+reset role;
+insert into public.admin_users (user_id, role) values ('00000000-0000-0000-0000-00000000000a', 'curator');
+select pg_temp.as_user('00000000-0000-0000-0000-00000000000a');
+select pg_temp.check((select count(*) from public.staff_applications(null)) = 1, 'куратор видит заявки студентов');
+update public.student_applications set status = 'documents_ready', curator_comment = 'Добавьте перевод аттестата', notes = 'взлом';
+insert into public.application_tasks (application_id, title) select id, 'Перевести аттестат' from public.student_applications;
+reset role;
+select pg_temp.check((select notes from public.student_applications) = 'моя заметка', 'куратор не меняет заметки студента');
+select pg_temp.check((select curator_comment from public.student_applications) = 'Добавьте перевод аттестата', 'куратор пишет комментарий');
+select pg_temp.check((select count(*) from public.application_tasks where user_id = '00000000-0000-0000-0000-00000000000b') = 2, 'задача куратора принадлежит студенту');
+select pg_temp.check((select by_staff from public.application_events order by id desc limit 1), 'смена статуса куратором отмечена в истории');
+delete from public.admin_users where user_id = '00000000-0000-0000-0000-00000000000a';
+
 -- Удаление аккаунта каскадно удаляет личные данные
 select pg_temp.as_user('00000000-0000-0000-0000-00000000000a');
 select public.delete_my_account();

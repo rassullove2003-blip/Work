@@ -9,6 +9,7 @@ import { openOfficial } from '../../lib/links';
 import { Button, EmptyState, ErrorState, InfoRow, LoadingState, Notice, ScreenHeader, Section, SourceNote, ui, VerificationBadge } from '../../components/ui';
 import { FavoriteButton, ScholarshipCard, UniversityAvatar } from '../../components/cards';
 import { DeadlineCard } from '../../components/DeadlineCard';
+import { AddToApplications } from '../../components/AddToApplications';
 import { RequirementsView } from '../../components/RequirementsView';
 import { colors, spacing } from '../../theme';
 import { t } from '../../i18n';
@@ -75,6 +76,7 @@ export default function ProgramScreen() {
               onPress={() => fav.toggleProgram(p.id)}
               testID="program-fav-button"
             />
+            <AddToApplications program={p} />
             {officialUrl ? <Button title={s.common.officialSite} icon="open-outline" onPress={() => openOfficial(officialUrl)} /> : null}
           </View>
           {fav.error ? <Text style={{ color: colors.danger }}>{fav.error}</Text> : null}
