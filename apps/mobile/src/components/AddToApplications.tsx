@@ -4,6 +4,7 @@ import { defaultIntakeYear, type ProgramWithUniversity } from '@uniitalia/shared
 import { useAuth } from '../lib/auth';
 import { useCatalog } from '../lib/catalog';
 import { createApplication } from '../lib/applications';
+import { useReminders } from '../lib/reminders';
 import { supabase } from '../lib/supabase';
 import { notify } from '../lib/links';
 import { Button } from './ui';
@@ -12,6 +13,7 @@ import { Button } from './ui';
 export function AddToApplications({ program }: { program: ProgramWithUniversity }) {
   const auth = useAuth();
   const catalog = useCatalog();
+  const reminders = useReminders();
   const [existingId, setExistingId] = useState<string | null | undefined>(undefined);
   const [busy, setBusy] = useState(false);
 
@@ -47,7 +49,10 @@ export function AddToApplications({ program }: { program: ProgramWithUniversity 
   const add = async () => {
     setBusy(true);
     try {
-      const id = await createApplication(auth.userId!, program.id, defaultIntakeYear(), catalog.deadlinesOfProgram(program.id));
+      const deadlines = catalog.deadlinesOfProgram(program.id);
+      const id = await createApplication(auth.userId!, program.id, defaultIntakeYear(), deadlines);
+      // сроки программы сразу попадают в напоминания
+      await reminders.subscribeMany(deadlines.filter((d) => new Date(d.ends_at) >= new Date()).map((d) => d.id));
       setExistingId(id);
       router.push({ pathname: '/application/[id]', params: { id } } as never);
     } catch (e) {

@@ -121,6 +121,8 @@ export async function deleteApplication(id: string) {
 export async function addTask(applicationId: string, title: string, dueDate: string | null) {
   const { error } = await db().from('application_tasks').insert({ application_id: applicationId, title, due_date: dueDate });
   fail(error, 'Не удалось добавить задачу');
+  // если дата уже близко — напоминание придёт сразу, а не утром
+  if (dueDate) await db().rpc('remind_me_now');
 }
 
 export async function setTaskDone(id: string, done: boolean) {

@@ -197,6 +197,28 @@ select pg_temp.check((select count(*) from public.notifications where read_at is
 reset role;
 delete from public.admin_users where user_id = '00000000-0000-0000-0000-00000000000a';
 
+-- Напоминания о дедлайнах
+reset role;
+insert into public.admission_deadlines (program_id, academic_year, title_ru, ends_at, status)
+  select id, '2027/2028', 'QA подача документов', (current_date + 5)::timestamp at time zone 'Europe/Rome' + interval '12 hours', 'published'
+  from public.degree_programs where slug = 'unibo-economics-finance';
+select pg_temp.as_user('00000000-0000-0000-0000-00000000000b');
+insert into public.deadline_subscriptions (user_id, deadline_id) select auth.uid(), id from public.admission_deadlines where title_ru = 'QA подача документов';
+insert into public.application_tasks (application_id, title, due_date) select id, 'Записаться на тест', current_date + 1 from public.student_applications;
+select pg_temp.check((select public.remind_me_now()) = 2, 'студент получает напоминания по подписке и задаче');
+select pg_temp.check(exists (select 1 from public.notifications where title = 'Через 5 дней: QA подача документов'), 'текст напоминания о сроке');
+select pg_temp.check(exists (select 1 from public.notifications where title = 'Завтра срок: Записаться на тест'), 'напоминание о задаче');
+select pg_temp.check((select public.remind_me_now()) = 0, 'повторно не напоминает');
+select pg_temp.expect_error($$select public.send_deadline_reminders()$$, 'студент не запускает рассылку для всех');
+select pg_temp.as_user('00000000-0000-0000-0000-00000000000a');
+select pg_temp.check((select count(*) from public.deadline_subscriptions) = 0, 'чужие подписки не видны');
+reset role;
+select pg_temp.check(public.send_deadline_reminders(current_date + 2) = 1, 'следующий порог (3 дня) срабатывает');
+select pg_temp.check(exists (select 1 from public.notifications where title = 'Через 3 дня: QA подача документов'), 'русские окончания: 3 дня');
+update public.student_profiles set reminders_enabled = false where user_id = '00000000-0000-0000-0000-00000000000b';
+select pg_temp.check(public.send_deadline_reminders(current_date + 5) = 0, 'выключенные напоминания не приходят');
+select pg_temp.check(public.ru_days(21) = '21 день' and public.ru_days(12) = '12 дней' and public.ru_days(24) = '24 дня', 'склонение дней');
+
 -- Удаление аккаунта каскадно удаляет личные данные
 select pg_temp.as_user('00000000-0000-0000-0000-00000000000a');
 select public.delete_my_account();
