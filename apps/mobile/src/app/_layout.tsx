@@ -6,6 +6,7 @@ import { AuthProvider } from '../lib/auth';
 import { FavoritesProvider } from '../lib/favorites';
 import { FiltersProvider } from '../lib/filters';
 import { StaffProvider } from '../lib/staff';
+import { NotificationsProvider } from '../lib/notifications';
 import { colors } from '../theme';
 
 export default function RootLayout() {
@@ -13,6 +14,7 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <AuthProvider>
         <StaffProvider>
+        <NotificationsProvider>
         <CatalogProvider>
           <FavoritesProvider>
             <FiltersProvider>
@@ -25,6 +27,7 @@ export default function RootLayout() {
             </FiltersProvider>
           </FavoritesProvider>
         </CatalogProvider>
+        </NotificationsProvider>
         </StaffProvider>
       </AuthProvider>
     </SafeAreaProvider>

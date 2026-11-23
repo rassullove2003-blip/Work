@@ -9,6 +9,7 @@ import { listMyApplications, nextDueTask, type Application, type ApplicationTask
 import { Button, EmptyState, ErrorState, LoadingState, Notice, Section, ui } from '../../components/ui';
 import { ProgramCard, UniversityCard } from '../../components/cards';
 import { ApplicationCard } from '../../components/ApplicationCard';
+import { CabinetLinks } from '../../components/CabinetLinks';
 import { spacing } from '../../theme';
 import { t } from '../../i18n';
 
@@ -99,9 +100,14 @@ export default function ApplicationsScreen() {
           <Button title={s.profile.login} onPress={() => router.push('/auth')} testID="applications-login" />
         </View>
       ) : (
-        <Section title="Мои заявки">
-          <MyApplications key={refreshKey} userId={auth.userId} />
-        </Section>
+        <>
+          <Section title="Мои заявки">
+            <MyApplications key={refreshKey} userId={auth.userId} />
+          </Section>
+          <Section title="Кабинет">
+            <CabinetLinks />
+          </Section>
+        </>
       )}
 
       {fav.mode !== 'login_required' ? (

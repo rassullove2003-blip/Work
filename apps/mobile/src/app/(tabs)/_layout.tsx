@@ -3,6 +3,7 @@ import type { ColorValue } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { colors } from '../../theme';
 import { t } from '../../i18n';
+import { useNotifications } from '../../lib/notifications';
 
 type IconName = React.ComponentProps<typeof Ionicons>['name'];
 
@@ -19,6 +20,7 @@ function icon(name: IconName, active: IconName) {
 
 export default function TabLayout() {
   const s = t().tabs;
+  const { unread } = useNotifications();
   return (
     <Tabs
       screenOptions={{
@@ -34,7 +36,7 @@ export default function TabLayout() {
       <Tabs.Screen name="search" options={{ title: s.search, tabBarIcon: icon('search-outline', 'search') }} />
       <Tabs.Screen name="scholarships" options={{ title: s.scholarships, tabBarIcon: icon('ribbon-outline', 'ribbon') }} />
       <Tabs.Screen name="applications" options={{ title: s.applications, tabBarLabel: s.applicationsShort, tabBarAccessibilityLabel: s.applications, tabBarIcon: icon('heart-outline', 'heart') }} />
-      <Tabs.Screen name="profile" options={{ title: s.profile, tabBarIcon: icon('person-outline', 'person') }} />
+      <Tabs.Screen name="profile" options={{ title: s.profile, tabBarIcon: icon('person-outline', 'person'), tabBarBadge: unread ? (unread > 99 ? '99+' : unread) : undefined }} />
     </Tabs>
   );
 }

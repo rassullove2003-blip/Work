@@ -140,6 +140,10 @@ export default function ApplicationScreen() {
             <Text style={ui.muted}>
               {[student.country && `Страна: ${student.country}`, student.citizenship && `Гражданство: ${student.citizenship}`].filter(Boolean).join(' · ') || 'Профиль не заполнен'}
             </Text>
+            <View style={[ui.wrap, { marginTop: spacing.sm }]}>
+              <Button title="Написать" icon="chatbubbles-outline" variant="secondary" onPress={() => router.push({ pathname: '/admin/chat/[id]', params: { id: student.user_id } } as never)} testID="staff-open-chat" />
+              <Button title="Документы" icon="folder-open-outline" variant="outline" onPress={() => router.push({ pathname: '/documents', params: { student: student.user_id } })} />
+            </View>
           </View>
         ) : null}
 

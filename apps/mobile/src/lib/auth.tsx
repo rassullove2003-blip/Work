@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { removeAllOwnFiles } from './files';
 import type { Session } from '@supabase/supabase-js';
 import { supabase, isSupabaseConfigured } from './supabase';
 
@@ -91,6 +92,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       },
       async deleteAccount() {
         const client = requireClient();
+        if (session) await removeAllOwnFiles(session.user.id).catch(() => {});
         const { error } = await client.rpc('delete_my_account');
         if (error) throw new Error('Не удалось удалить аккаунт. Попробуйте позже.');
         await client.auth.signOut();

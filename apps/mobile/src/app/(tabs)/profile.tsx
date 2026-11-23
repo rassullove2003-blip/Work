@@ -7,6 +7,7 @@ import { useAuth, type StudentProfile } from '../../lib/auth';
 import { useStaff } from '../../lib/staff';
 import { ROLE_LABELS } from '@uniitalia/shared';
 import { confirmAction, notify } from '../../lib/links';
+import { CabinetLinks } from '../../components/CabinetLinks';
 import { Button, EmptyState, FormField, LoadingState, Notice, Section, ui } from '../../components/ui';
 import { colors, spacing } from '../../theme';
 import { t } from '../../i18n';
@@ -141,6 +142,9 @@ export default function ProfileScreen() {
               testID="open-admin"
             />
           ) : null}
+          <Section title="Мой кабинет">
+            <CabinetLinks />
+          </Section>
           <Section title="Мои данные">
             <ProfileForm />
           </Section>

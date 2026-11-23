@@ -31,6 +31,12 @@ begin
   end if;
 end $$;
 
+create function pg_temp.expect_error(stmt text, msg text) returns void language plpgsql as $$
+begin
+  begin execute stmt; exception when others then raise notice 'ok  %', msg; return; end;
+  raise exception 'FAIL: %', msg;
+end $$;
+
 -- Триггер профиля
 select pg_temp.check((select full_name from public.student_profiles where user_id = '00000000-0000-0000-0000-00000000000a') = 'Студент А', 'профиль создаётся при регистрации');
 
@@ -153,6 +159,42 @@ select pg_temp.check((select notes from public.student_applications) = 'моя �
 select pg_temp.check((select curator_comment from public.student_applications) = 'Добавьте перевод аттестата', 'куратор пишет комментарий');
 select pg_temp.check((select count(*) from public.application_tasks where user_id = '00000000-0000-0000-0000-00000000000b') = 2, 'задача куратора принадлежит студенту');
 select pg_temp.check((select by_staff from public.application_events order by id desc limit 1), 'смена статуса куратором отмечена в истории');
+select pg_temp.check((select count(*) from public.notifications where user_id = '00000000-0000-0000-0000-00000000000b' and kind in ('status', 'comment')) = 2, 'студент получил уведомления об этапе и комментарии');
+
+-- Чат и документы
+select pg_temp.as_user('00000000-0000-0000-0000-00000000000b');
+insert into public.chat_messages (student_id, body, from_staff) values (auth.uid(), 'Здравствуйте, вопрос по визе', true);
+select pg_temp.check((select from_staff from public.chat_messages) = false, 'студент не может выдать себя за куратора');
+select pg_temp.check((select last_message_preview from public.chat_threads) = 'Здравствуйте, вопрос по визе', 'ветка чата создаётся');
+insert into public.student_documents (user_id, category, title, status, storage_path, file_name, mime_type, size_bytes)
+  values (auth.uid(), 'passport', 'Паспорт', 'ready', auth.uid() || '/passport.pdf', 'passport.pdf', 'application/pdf', 1000);
+select pg_temp.check((select status::text from public.student_documents) = 'uploaded', 'студент не может сам принять документ');
+update public.student_documents set status = 'ready', staff_comment = 'подделка';
+select pg_temp.check((select status::text from public.student_documents) = 'uploaded' and (select staff_comment from public.student_documents) is null, 'студент не меняет статус проверки');
+reset role;
+select pg_temp.check((select count(*) from public.notifications where kind = 'chat' and user_id = '00000000-0000-0000-0000-00000000000a') = 1, 'куратор получил уведомление о сообщении');
+delete from public.admin_users where user_id = '00000000-0000-0000-0000-00000000000a';
+select pg_temp.as_user('00000000-0000-0000-0000-00000000000a');
+select pg_temp.check((select count(*) from public.chat_messages) = 0, 'чужой студент не видит чат');
+select pg_temp.check((select count(*) from public.student_documents) = 0, 'чужой студент не видит документы');
+select pg_temp.expect_error($$insert into public.chat_messages (student_id, body) values ('00000000-0000-0000-0000-00000000000b', 'спам')$$, 'чужой студент не пишет в чужой чат');
+reset role;
+insert into public.admin_users (user_id, role) values ('00000000-0000-0000-0000-00000000000a', 'curator');
+select pg_temp.as_user('00000000-0000-0000-0000-00000000000a');
+select pg_temp.check((select count(*) from public.staff_chats()) = 1, 'куратор видит список чатов');
+select pg_temp.check((select unread from public.staff_chats()), 'новое сообщение студента отмечено непрочитанным');
+insert into public.chat_messages (student_id, body) values ('00000000-0000-0000-0000-00000000000b', 'Ответ куратора');
+update public.student_documents set status = 'needs_changes', staff_comment = 'Нужен разворот с фото', file_name = 'взлом';
+select pg_temp.check((select count(*) from public.staff_documents(null)) = 1, 'куратор видит документы студентов');
+reset role;
+select pg_temp.check((select from_staff from public.chat_messages where body = 'Ответ куратора'), 'ответ куратора помечен');
+select pg_temp.check((select file_name from public.student_documents) = 'passport.pdf' and (select status::text from public.student_documents) = 'needs_changes', 'куратор меняет только статус документа');
+select pg_temp.check((select count(*) from public.notifications where user_id = '00000000-0000-0000-0000-00000000000b' and kind in ('chat', 'document')) = 2, 'студент получил уведомления о сообщении и проверке');
+select pg_temp.as_user('00000000-0000-0000-0000-00000000000b');
+select public.mark_chat_read();
+select public.mark_notifications_read();
+select pg_temp.check((select count(*) from public.notifications where read_at is null) = 0, 'уведомления отмечаются прочитанными');
+reset role;
 delete from public.admin_users where user_id = '00000000-0000-0000-0000-00000000000a';
 
 -- Удаление аккаунта каскадно удаляет личные данные

@@ -15,6 +15,8 @@ const ITEMS: Item[] = [
   { href: '/admin/universities', icon: 'business-outline', title: 'Университеты', text: 'Добавление, фото, логотипы, описание', table: 'universities' },
   { href: '/admin/programs', icon: 'book-outline', title: 'Программы', text: 'Специальности и стоимость по годам', table: 'degree_programs' },
   { href: '/admin/deadlines', icon: 'calendar-outline', title: 'Дедлайны', text: 'Сроки подачи и стипендий', table: 'admission_deadlines' },
+  { href: '/admin/chats', icon: 'chatbubbles-outline', title: 'Чаты со студентами', text: 'Вопросы студентов и файлы' },
+  { href: '/admin/documents', icon: 'document-text-outline', title: 'Документы студентов', text: 'Проверка загруженных документов' },
   { href: '/admin/applications', icon: 'school-outline', title: 'Заявки студентов', text: 'Поступления, этапы, комментарии и задачи' },
   { href: '/admin/import', icon: 'cloud-upload-outline', title: 'Импорт данных', text: 'Google Таблица, Excel или CSV: проверка и загрузка' },
   { href: '/admin/staff', icon: 'people-outline', title: 'Сотрудники', text: 'Назначение кураторов и администраторов', adminOnly: true },
