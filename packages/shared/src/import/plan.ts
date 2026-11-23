@@ -51,7 +51,7 @@ export interface ProgramRow extends Meta {
   title_ru?: string;
   level: StudyLevel;
   fields?: string[];
-  language: TeachingLanguage;
+  language?: TeachingLanguage;
   duration_years?: number;
   ects?: number;
   program_url?: string;
@@ -149,6 +149,11 @@ const LEVEL_MAP: Record<string, StudyLevel> = {
   'одноцикловая программа': 'single_cycle',
   'single cycle': 'single_cycle',
   'laurea magistrale a ciclo unico': 'single_cycle',
+  'single cycle degree programme': 'single_cycle',
+  'докторантура (phd)': 'phd',
+  докторантура: 'phd',
+  phd: 'phd',
+  'dottorato di ricerca': 'phd',
 };
 const LANGUAGE_MAP: Record<string, TeachingLanguage> = {
   английский: 'en',
@@ -508,7 +513,7 @@ export function buildImportPlan(wb: Workbook, existing: ExistingKeys): ImportRes
       title_ru: r.str('Название на русском'),
       level: r.pick('Уровень', N.LEVEL_MAP, true, 'Уровень') ?? 'bachelor',
       fields: fieldsRaw ? fields : undefined,
-      language: r.pick('Язык обучения', N.LANGUAGE_MAP, true, 'Язык обучения') ?? 'en',
+      language: r.pick('Язык обучения', N.LANGUAGE_MAP, false, 'Язык обучения'),
       duration_years: r.int('Длительность, лет', 1, 7),
       ects: r.int('ECTS', 30, 420),
       program_url: r.url('Страница программы'),

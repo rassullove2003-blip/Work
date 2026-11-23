@@ -30,7 +30,7 @@ export function programFields(universities: Option[]): FieldDef[] {
     { name: 'title_ru', label: 'Русское пояснение', type: 'text' },
     { name: 'university_id', label: 'Университет', type: 'select', required: true, searchable: true, options: universities },
     { name: 'level', label: 'Уровень', type: 'select', required: true, options: Object.entries(LEVELS).map(([v, l]) => ({ value: v, label: l.ru })) },
-    { name: 'language', label: 'Язык обучения', type: 'select', required: true, options: Object.entries(LANGUAGES).map(([v, l]) => ({ value: v, label: l })) },
+    { name: 'language', label: 'Язык обучения', type: 'select', options: Object.entries(LANGUAGES).map(([v, l]) => ({ value: v, label: l })) },
     { name: 'duration_years', label: 'Длительность, лет', type: 'number' },
     { name: 'ects', label: 'ECTS', type: 'number' },
     { name: 'program_url', label: 'Страница программы', type: 'url', placeholder: 'https://…' },

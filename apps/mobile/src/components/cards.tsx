@@ -181,7 +181,7 @@ export function ProgramCard({ program, showUniversity = true }: { program: Progr
         </View>
       ) : null}
       <View style={styles.tags}>
-        <Tag text={LANGUAGES[program.language]} tone="blue" />
+        {program.language ? <Tag text={LANGUAGES[program.language]} tone="blue" /> : null}
         <Tag text={formatDuration(program)} />
       </View>
       <View style={styles.cardFooter}>

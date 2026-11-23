@@ -98,7 +98,7 @@ export function filterPrograms(programs: ProgramWithUniversity[], f: ProgramFilt
   const scored = programs
     .filter((p) => inList(f.levels, p.level))
     .filter((p) => f.fields.length === 0 || p.fields.some((x) => f.fields.includes(x)))
-    .filter((p) => f.languages.length === 0 || f.languages.includes(p.language) || (p.language === 'en_it' && f.languages.some((l) => l === 'en' || l === 'it')))
+    .filter((p) => f.languages.length === 0 || (p.language != null && f.languages.includes(p.language)) || (p.language === 'en_it' && f.languages.some((l) => l === 'en' || l === 'it')))
     .filter((p) => inList(f.cities, p.university.city))
     .filter((p) => inList(f.regions, p.university.region))
     .filter((p) => inList(f.universityTypes, p.university.public_private))

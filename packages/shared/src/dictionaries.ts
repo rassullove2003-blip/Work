@@ -75,6 +75,7 @@ export const LEVELS: Record<StudyLevel, { ru: string; it: string }> = {
   bachelor: { ru: 'Бакалавриат', it: 'Laurea triennale' },
   master: { ru: 'Магистратура', it: 'Laurea magistrale' },
   single_cycle: { ru: 'Одноцикловая программа', it: 'Laurea magistrale a ciclo unico' },
+  phd: { ru: 'Докторантура (PhD)', it: 'Dottorato di ricerca' },
 };
 
 export const LANGUAGES: Record<TeachingLanguage, string> = {

@@ -7,7 +7,7 @@ export type VerificationStatus = 'verified' | 'needs_review' | 'unverified' | 'o
 
 export type PublicPrivate = 'public' | 'private';
 
-export type StudyLevel = 'foundation' | 'bachelor' | 'master' | 'single_cycle';
+export type StudyLevel = 'foundation' | 'bachelor' | 'master' | 'single_cycle' | 'phd';
 
 export type TeachingLanguage = 'en' | 'it' | 'en_it';
 
@@ -47,12 +47,15 @@ export interface Program extends VerificationMeta {
   title_ru: string | null;
   level: StudyLevel;
   fields: string[];
-  language: TeachingLanguage;
+  /** null — язык не указан («Информация уточняется»). */
+  language: TeachingLanguage | null;
   duration_years: number | null;
   ects: number | null;
   /** Стоимость в евро за год; null = информация уточняется. */
   tuition_fee_min_eur: number | null;
   tuition_fee_max_eur: number | null;
+  /** Текстовое пояснение к стоимости (ориентиры, от чего зависит). */
+  fee_notes_ru?: string | null;
   curriculum_url: string | null;
   program_url: string | null;
   description_ru: string | null;

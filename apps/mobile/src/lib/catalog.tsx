@@ -50,6 +50,7 @@ type ProgramCatalogRow = Omit<Program, 'tuition_fee_min_eur' | 'tuition_fee_max_
   fee_min_eur: number | string | null;
   fee_max_eur: number | string | null;
   fee_academic_year: string | null;
+  fee_notes_ru: string | null;
 };
 
 async function loadFromSupabase() {
@@ -67,11 +68,12 @@ async function loadFromSupabase() {
 
   const universities = (u.data ?? []) as University[];
   const programs: Program[] = ((p.data ?? []) as ProgramCatalogRow[]).map((row) => {
-    const { fee_min_eur, fee_max_eur, fee_academic_year, ...rest } = row;
+    const { fee_min_eur, fee_max_eur, fee_academic_year, fee_notes_ru, ...rest } = row;
     return {
       ...rest,
       tuition_fee_min_eur: fee_min_eur == null ? null : Number(fee_min_eur),
       tuition_fee_max_eur: fee_max_eur == null ? null : Number(fee_max_eur),
+      fee_notes_ru,
       // для стоимости показываем учебный год издания программы
       academic_year: fee_academic_year ?? rest.academic_year,
     };
