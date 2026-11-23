@@ -63,6 +63,7 @@ export default function HomeScreen() {
     { label: s.home.quick.scholarships, icon: 'ribbon-outline', onPress: () => router.navigate('/scholarships') },
     { label: s.home.quick.english, icon: 'language-outline', onPress: () => searchPrograms({ languages: ['en'] }) },
     { label: s.home.quick.deadlines, icon: 'calendar-outline', onPress: () => router.push('/deadlines') },
+    { label: 'Правила поступления', icon: 'book-outline', onPress: () => router.push('/rules' as never) },
   ];
 
   return (
