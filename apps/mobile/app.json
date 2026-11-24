@@ -32,6 +32,12 @@
       "expo-web-browser",
       "expo-font",
       [
+        "expo-notifications",
+        {
+          "color": "#00B8D9"
+        }
+      ],
+      [
         "expo-image-picker",
         {
           "photosPermission": "UniItalia использует доступ к фото, чтобы вы могли загружать документы и отправлять файлы куратору, а сотрудники — фотографии университетов.",

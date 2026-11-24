@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { removeAllOwnFiles } from './files';
+import { unregisterPush } from './push';
 import type { Session } from '@supabase/supabase-js';
 import { supabase, isSupabaseConfigured } from './supabase';
 
@@ -88,6 +89,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (error) throw new Error(authErrorRu(error.message));
       },
       async signOut() {
+        await unregisterPush().catch(() => {});
         await requireClient().auth.signOut();
       },
       async deleteAccount() {

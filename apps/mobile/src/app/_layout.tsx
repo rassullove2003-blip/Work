@@ -8,6 +8,7 @@ import { FiltersProvider } from '../lib/filters';
 import { StaffProvider } from '../lib/staff';
 import { NotificationsProvider } from '../lib/notifications';
 import { RemindersProvider } from '../lib/reminders';
+import { PushRegistrar } from '../lib/push';
 import { colors } from '../theme';
 
 export default function RootLayout() {
@@ -21,6 +22,7 @@ export default function RootLayout() {
           <FavoritesProvider>
             <FiltersProvider>
               <StatusBar style="dark" />
+              <PushRegistrar />
               <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.surface } }}>
                 <Stack.Screen name="(tabs)" />
                 <Stack.Screen name="filters" options={{ presentation: 'modal' }} />
