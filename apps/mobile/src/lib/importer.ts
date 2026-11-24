@@ -1,10 +1,9 @@
 import { strFromU8 } from 'fflate';
 import {
   buildImportPlan,
-  googleSheetCsvUrl,
-  IMPORT_SHEETS,
-  matchSheet,
+  fetchExistingKeys,
   parseCsv,
+  readGoogleSheet as readSharedGoogleSheet,
   readXlsx,
   type ExistingKeys,
   type ImportIssue,
@@ -19,20 +18,7 @@ import { supabase } from './supabase';
 
 export async function fetchExisting(): Promise<ExistingKeys> {
   if (!supabase) throw new Error('Сервер не подключён');
-  const [u, p, s, d] = await Promise.all([
-    supabase.from('universities').select('slug').limit(10000),
-    supabase.from('degree_programs').select('slug').limit(10000),
-    supabase.from('scholarships').select('slug').limit(10000),
-    supabase.from('admission_deadlines').select('import_key').not('import_key', 'is', null).limit(10000),
-  ]);
-  const err = u.error ?? p.error ?? s.error ?? d.error;
-  if (err) throw new Error(err.message);
-  return {
-    universities: new Set((u.data ?? []).map((r) => r.slug as string)),
-    programs: new Set((p.data ?? []).map((r) => r.slug as string)),
-    scholarships: new Set((s.data ?? []).map((r) => r.slug as string)),
-    deadlines: new Set((d.data ?? []).map((r) => r.import_key as string)),
-  };
+  return fetchExistingKeys(supabase);
 }
 
 /** Читает выбранные файлы (.xlsx или несколько .csv) в одну «книгу». */
@@ -51,35 +37,9 @@ export async function readFiles(files: { uri: string; name: string }[]): Promise
   return wb;
 }
 
-/**
- * Читает листы Google Таблицы как CSV. Таблица должна быть открыта по ссылке
- * («Все, у кого есть ссылка — читатель»). Ключи Google в приложении не нужны.
- */
-export async function readGoogleSheet(sheetId: string): Promise<{ wb: Workbook; issues: ImportIssue[] }> {
-  const wb: Workbook = {};
-  const issues: ImportIssue[] = [];
-  for (const sh of IMPORT_SHEETS) {
-    const res = await fetch(googleSheetCsvUrl(sheetId, sh.title));
-    const type = res.headers.get('content-type') ?? '';
-    if (!res.ok || !type.includes('csv')) {
-      throw new Error(
-        res.status === 404
-          ? 'Таблица не найдена. Проверьте ссылку.'
-          : 'Нет доступа к таблице. В Google Таблице нажмите «Настройки доступа» → «Все, у кого есть ссылка» → «Читатель».',
-      );
-    }
-    const rows = parseCsv(await res.text());
-    // Если листа с таким названием нет, Google отдаёт первый лист — сверяем по заголовкам.
-    const header = rows[0] ?? [];
-    if (matchSheet('', header) !== sh.key) {
-      if (header.some((h) => h.trim())) {
-        issues.push({ sheet: sh.title, row: 0, column: '', message: 'Лист не найден в таблице, он будет пропущен', level: 'warning' });
-      }
-      continue;
-    }
-    wb[sh.title] = rows;
-  }
-  return { wb, issues };
+/** Читает листы Google Таблицы как CSV (общий код с серверной автосинхронизацией). */
+export function readGoogleSheet(sheetId: string): Promise<{ wb: Workbook; issues: ImportIssue[] }> {
+  return readSharedGoogleSheet(sheetId, fetch);
 }
 
 export async function validateWorkbook(wb: Workbook, extraIssues: ImportIssue[] = []): Promise<ImportResult> {

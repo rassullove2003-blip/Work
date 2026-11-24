@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ScrollView, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
 import * as DocumentPicker from 'expo-document-picker';
 import { useFocusEffect } from 'expo-router';
 import { extractSheetId, hasErrors, IMPORT_SHEETS, type ImportResult } from '@uniitalia/shared';
@@ -7,7 +7,7 @@ import { supabase } from '../../lib/supabase';
 import { useStaff } from '../../lib/staff';
 import { useCatalog } from '../../lib/catalog';
 import { applyPlan, logRun, readFiles, readGoogleSheet, validateWorkbook } from '../../lib/importer';
-import { confirmAction } from '../../lib/links';
+import { confirmAction, notify } from '../../lib/links';
 import { StaffGuard } from '../../components/admin/EditScreen';
 import { FormSection } from '../../components/admin/form';
 import { Button, Notice, ScreenHeader, ui } from '../../components/ui';
@@ -19,11 +19,56 @@ type Run = { id: string; source_kind: string; file_name: string | null; status: 
 const STATUS_RU: Record<string, string> = { validated: 'Проверено, не загружено', applied: 'Загружено', failed: 'Ошибка' };
 const KIND_RU: Record<string, string> = { google_sheets: 'Google Таблица', xlsx: 'Excel', csv: 'CSV' };
 
+type SavedSource = {
+  id: string;
+  google_sheet_id: string;
+  last_synced_at: string | null;
+  auto_sync: boolean;
+  last_auto_at: string | null;
+  last_auto_status: 'ok' | 'unchanged' | 'failed' | null;
+  last_auto_message: string | null;
+};
+
+const AUTO_STATUS: Record<string, string> = { ok: 'изменения загружены', unchanged: 'таблица не менялась', failed: 'ошибка' };
+
+/** Переключатель ежедневной автосинхронизации (только администратор). */
+function AutoSync({ source, canEdit, onChanged }: { source: SavedSource; canEdit: boolean; onChanged: () => void }) {
+  const [busy, setBusy] = useState(false);
+  const toggle = async (on: boolean) => {
+    if (!supabase) return;
+    setBusy(true);
+    const { error } = await supabase.from('import_sources').update({ auto_sync: on }).eq('id', source.id);
+    setBusy(false);
+    if (error) notify('Не удалось сохранить', 'Включать автосинхронизацию может только администратор.');
+    onChanged();
+  };
+  return (
+    <View style={[styles.auto, { gap: spacing.sm }]}>
+      <View style={[ui.row, { justifyContent: 'space-between' }]}>
+        <Text style={[ui.body, { flex: 1, fontWeight: '600' }]}>Автосинхронизация каждый день</Text>
+        <Switch value={source.auto_sync} onValueChange={toggle} disabled={!canEdit || busy} trackColor={{ true: colors.secondary, false: colors.border }} testID="import-auto-sync" />
+      </View>
+      <Text style={ui.muted}>
+        Каждое утро (около 8:35 по Москве) сервер сам проверяет таблицу. Если есть изменения и нет ошибок — загружает их; пустые ячейки не стирают правки, сделанные в приложении. Если в таблице ошибки — ничего не меняет и присылает администраторам уведомление.
+      </Text>
+      {source.last_auto_at ? (
+        <Text style={[ui.muted, source.last_auto_status === 'failed' && { color: colors.danger }]}>
+          Последний запуск: {new Date(source.last_auto_at).toLocaleString('ru-RU')} — {AUTO_STATUS[source.last_auto_status ?? ''] ?? '—'}
+          {source.last_auto_status === 'failed' && source.last_auto_message ? `: ${source.last_auto_message}` : ''}
+        </Text>
+      ) : source.auto_sync ? (
+        <Text style={ui.muted}>Первый запуск — завтра утром.</Text>
+      ) : null}
+      {!canEdit ? <Text style={ui.muted}>Включить или выключить может администратор.</Text> : null}
+    </View>
+  );
+}
+
 function ImportScreen() {
   const { isAdmin } = useStaff();
   const catalog = useCatalog();
   const [link, setLink] = useState('');
-  const [savedSource, setSavedSource] = useState<{ id: string; google_sheet_id: string; last_synced_at: string | null } | null>(null);
+  const [savedSource, setSavedSource] = useState<SavedSource | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<ImportResult | null>(null);
@@ -34,11 +79,11 @@ function ImportScreen() {
   const loadMeta = useCallback(async () => {
     if (!supabase) return;
     const [s, r] = await Promise.all([
-      supabase.from('import_sources').select('id, google_sheet_id, last_synced_at').order('created_at').limit(1).maybeSingle(),
+      supabase.from('import_sources').select('id, google_sheet_id, last_synced_at, auto_sync, last_auto_at, last_auto_status, last_auto_message').order('created_at').limit(1).maybeSingle(),
       supabase.from('import_runs').select('id, source_kind, file_name, status, summary, created_at').order('created_at', { ascending: false }).limit(10),
     ]);
     if (s.data) {
-      setSavedSource(s.data);
+      setSavedSource(s.data as SavedSource);
       setLink((l) => l || `https://docs.google.com/spreadsheets/d/${s.data!.google_sheet_id}/edit`);
     }
     setRuns((r.data ?? []) as Run[]);
@@ -163,6 +208,7 @@ function ImportScreen() {
             </Text>
           ) : null}
           <Button title={savedSource ? 'Синхронизировать' : 'Проверить таблицу'} icon="sync-outline" onPress={checkGoogle} disabled={!!busy} testID="import-google" />
+          {savedSource ? <AutoSync source={savedSource} canEdit={isAdmin} onChanged={loadMeta} /> : null}
         </FormSection>
 
         <FormSection title="Файл Excel или CSV">
@@ -270,6 +316,7 @@ export default function ImportRoute() {
 }
 
 const styles = StyleSheet.create({
+  auto: { marginTop: spacing.lg, paddingTop: spacing.md, borderTopWidth: 1, borderTopColor: colors.border },
   label: { ...font.small, fontWeight: '700', color: colors.text, marginBottom: 6 },
   input: {
     ...font.body,
