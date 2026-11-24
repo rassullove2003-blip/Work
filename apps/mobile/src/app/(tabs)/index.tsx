@@ -9,6 +9,7 @@ import { useFilters } from '../../lib/filters';
 import { EmptyState, ErrorState, FilterChip, LoadingState, Logo, Notice, SearchInput, Section, ui, type IconName } from '../../components/ui';
 import { ScholarshipCard, UniversityCard } from '../../components/cards';
 import { DeadlineCard, upcoming } from '../../components/DeadlineCard';
+import { RulesHome } from '../../components/RulesHome';
 import { colors, font, radius, spacing } from '../../theme';
 import { t } from '../../i18n';
 
@@ -131,6 +132,8 @@ export default function HomeScreen() {
             <FilterChip key={q.label} label={q.label} icon={q.icon} onPress={q.onPress} />
           ))}
         </ScrollView>
+
+        <RulesHome />
 
         <Section title={s.home.popularUniversities} action={{ title: s.common.showAll, onPress: () => { setUniversityFilters({ query: '', cities: [], regions: [], types: [] }); setTab('universities'); router.navigate('/search'); } }}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.bleed} contentContainerStyle={styles.bleedContent}>

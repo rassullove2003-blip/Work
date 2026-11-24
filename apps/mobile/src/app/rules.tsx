@@ -1,31 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { normalize, type VerificationMeta } from '@uniitalia/shared';
+import { normalize } from '@uniitalia/shared';
 import { supabase } from '../lib/supabase';
 import { openOfficial } from '../lib/links';
+import { loadRules, OTHER_GROUP, RULE_GROUPS, ruleGroup, type Rule } from '../lib/rules';
 import { EmptyState, FilterChip, LoadingState, Notice, ScreenHeader, SearchInput, ui, VerificationBadge } from '../components/ui';
 import { colors, font, spacing } from '../theme';
 
-interface Rule extends VerificationMeta {
-  id: string;
-  sort_order: number;
-  section: string;
-  body_ru: string;
-  extra_urls: string[];
-}
-
-/** Группа правила по ключевым словам раздела (новые разделы из админки попадут в «Другое»). */
-const GROUPS: { label: string; words: string[] }[] = [
-  { label: 'Образование и документы', words: ['образован', 'документ', 'магистратура'] },
-  { label: 'Язык и тесты', words: ['язык', 'тест', 'cent', 'творческ'] },
-  { label: 'Сроки и виза', words: ['дедлайн', 'дата', 'даты', 'виза', 'срок'] },
-  { label: 'Стоимость и стипендии', words: ['стоимост', 'сбор', 'стипенд', 'плат'] },
-];
-const topicOf = (section: string) => {
-  const s = section.toLowerCase();
-  return GROUPS.find((g) => g.words.some((w) => s.includes(w)))?.label ?? 'Другое';
-};
 const host = (url: string) => url.replace(/^https?:\/\/(www\.)?/, '').split('/')[0];
 
 function RuleCard({ rule }: { rule: Rule }) {
@@ -50,32 +33,27 @@ function RuleCard({ rule }: { rule: Rule }) {
 }
 
 export default function RulesScreen() {
+  const params = useLocalSearchParams<{ topic?: string }>();
   const [rules, setRules] = useState<Rule[] | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [topic, setTopic] = useState<string | null>(null);
+  const [topic, setTopic] = useState<string | null>(params.topic ? String(params.topic) : null);
   const [q, setQ] = useState('');
 
-  const load = useCallback(() => {
+  const load = useCallback((force = false) => {
     if (!supabase) return;
-    supabase
-      .from('admission_rules')
-      .select('id, sort_order, section, body_ru, source_url, extra_urls, academic_year, verification_status, verified_at')
-      .eq('status', 'published')
-      .order('sort_order')
-      .then(({ data, error: e }) => {
-        if (e) setError('Не удалось загрузить правила. Проверьте интернет.');
-        else {
-          setRules((data ?? []) as Rule[]);
-          setError(null);
-        }
-      });
+    loadRules(force)
+      .then((r) => {
+        setRules(r);
+        setError(null);
+      })
+      .catch((e: Error) => setError(e.message));
   }, []);
-  useEffect(load, [load]);
+  useEffect(() => load(), [load]);
 
-  const present = new Set((rules ?? []).map((r) => topicOf(r.section)));
-  const topics = [...GROUPS.map((g) => g.label), 'Другое'].filter((t) => present.has(t));
+  const present = new Set((rules ?? []).map((r) => ruleGroup(r.section)));
+  const topics = [...RULE_GROUPS.map((g) => g.label), OTHER_GROUP].filter((t) => present.has(t));
   const list = (rules ?? [])
-    .filter((r) => !topic || topicOf(r.section) === topic)
+    .filter((r) => !topic || ruleGroup(r.section) === topic)
     .filter((r) => !q || normalize(`${r.section} ${r.body_ru}`).includes(normalize(q)));
 
   return (
@@ -84,11 +62,11 @@ export default function RulesScreen() {
       {!supabase ? (
         <EmptyState icon="cloud-offline-outline" title="Правила доступны при подключении к серверу." />
       ) : error ? (
-        <EmptyState icon="cloud-offline-outline" title={error} action={{ title: 'Повторить', onPress: load }} />
+        <EmptyState icon="cloud-offline-outline" title={error} action={{ title: 'Повторить', onPress: () => load(true) }} />
       ) : !rules ? (
         <LoadingState />
       ) : (
-        <ScrollView contentContainerStyle={ui.content} refreshControl={<RefreshControl refreshing={false} onRefresh={load} />}>
+        <ScrollView contentContainerStyle={ui.content} refreshControl={<RefreshControl refreshing={false} onRefresh={() => load(true)} />}>
           <Notice tone="warning" text="Это общие ориентиры по циклу 2027/28. Решающее значение всегда имеет официальный call конкретного курса — сверяйте требования на странице программы." />
           <View style={{ gap: spacing.md, marginVertical: spacing.lg }}>
             <SearchInput placeholder="Поиск: IELTS, виза, CIMEA…" value={q} onChangeText={setQ} onClear={() => setQ('')} />
