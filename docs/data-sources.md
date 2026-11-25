@@ -18,3 +18,15 @@
 3. Поставить статус «Проверено», снять «Демонстрационная запись», опубликовать.
 4. Правила разных учебных лет и регионов не смешивать: для нового года — новая строка в `program_editions` /
    `admission_requirements` / `scholarship_eligibility`.
+
+## Виза и переезд (проверено 25.11.2026)
+
+| Что | Источник |
+|---|---|
+| Документы для визы «Studio – Immatricolazione università», посольство по стране, сбор 50 € | Опросник МИД Италии https://vistoperitalia.esteri.it/ (гражданство = проживание, «oltre i 90 giorni») — 12 стран СНГ |
+| Permesso di soggiorno через почту (kit), страховка/SSN, регистрация в Comune, экстренные номера | https://vistoperitalia.esteri.it/infovisto?code=17_0_D |
+| Сроки подачи на визу (31.10.2027 для 2027/28), предзачисление только через Universitaly, оценка миграционного риска | https://www.universitaly.it/en/studenti-stranieri |
+| Сумма средств 10 179,85 €/год, жильё, страховка, документы об образовании, 8 рабочих дней, продление | Циркуляр MUR 2026/27–2027/28: https://universitaly-private.cineca.it/uploads/universitaly-pubblico/Circolare_2026-2027_studenti_internazionali.pdf |
+| Визовые центры (BLS, VMS, TLScontact, VFS) | Список МИД Италии от 03.04.2024: https://vistoperitalia.esteri.it/files/public/moduli/it/fornitori_esterni_convenzionati_di_servizi_di_visto.pdf |
+
+Расхождение: в опроснике МИД указано «не менее 460,28 € в месяц», в циркуляре MUR — 10 179,85 € в год. В приложении показаны обе формулировки с рекомендацией уточнить у посольства.

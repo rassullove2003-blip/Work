@@ -10,6 +10,7 @@ import { EmptyState, ErrorState, FilterChip, LoadingState, Logo, Notice, SearchI
 import { ScholarshipCard, UniversityCard } from '../../components/cards';
 import { DeadlineCard, upcoming } from '../../components/DeadlineCard';
 import { RulesHome } from '../../components/RulesHome';
+import { VisaHomeCard } from '../../components/VisaHomeCard';
 import { colors, font, radius, spacing } from '../../theme';
 import { t } from '../../i18n';
 
@@ -65,6 +66,7 @@ export default function HomeScreen() {
     { label: s.home.quick.english, icon: 'language-outline', onPress: () => searchPrograms({ languages: ['en'] }) },
     { label: s.home.quick.deadlines, icon: 'calendar-outline', onPress: () => router.push('/deadlines') },
     { label: 'Правила поступления', icon: 'book-outline', onPress: () => router.push('/rules' as never) },
+    { label: 'Виза', icon: 'airplane-outline', onPress: () => router.push('/visa' as never) },
   ];
 
   return (
@@ -134,6 +136,8 @@ export default function HomeScreen() {
         </ScrollView>
 
         <RulesHome />
+
+        <VisaHomeCard />
 
         <Section title={s.home.popularUniversities} action={{ title: s.common.showAll, onPress: () => { setUniversityFilters({ query: '', cities: [], regions: [], types: [] }); setTab('universities'); router.navigate('/search'); } }}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.bleed} contentContainerStyle={styles.bleedContent}>
