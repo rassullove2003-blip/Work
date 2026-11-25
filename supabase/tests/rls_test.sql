@@ -219,6 +219,16 @@ update public.student_profiles set reminders_enabled = false where user_id = '00
 select pg_temp.check(public.send_deadline_reminders(current_date + 5) = 0, 'выключенные напоминания не приходят');
 select pg_temp.check(public.ru_days(21) = '21 день' and public.ru_days(12) = '12 дней' and public.ru_days(24) = '24 дня', 'склонение дней');
 
+-- Заявки на консультацию
+select pg_temp.as_user(null);
+insert into public.consultation_requests (name, contact, consent, status, staff_note) values ('Гость', '+77010000000', true, 'closed', 'взлом');
+select pg_temp.expect_error($$insert into public.consultation_requests (name, contact, consent) values ('Гость', '+77010000000', false)$$, 'заявка без согласия отклоняется');
+insert into public.consultation_requests (name, contact, consent) values ('Гость', '+77010000000', true);
+insert into public.consultation_requests (name, contact, consent) values ('Гость', '+77010000000', true);
+select pg_temp.expect_error($$insert into public.consultation_requests (name, contact, consent) values ('Гость', '+77010000000', true)$$, 'не больше 3 заявок с одного контакта в сутки');
+reset role;
+select pg_temp.check((select count(*) from public.consultation_requests where contact = '+77010000000' and status = 'new' and staff_note is null) = 3, 'гость не задаёт статус и заметку');
+
 -- Удаление аккаунта каскадно удаляет личные данные
 select pg_temp.as_user('00000000-0000-0000-0000-00000000000a');
 select public.delete_my_account();

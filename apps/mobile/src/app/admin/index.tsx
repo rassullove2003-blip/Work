@@ -18,6 +18,7 @@ const ITEMS: Item[] = [
   { href: '/admin/rules', icon: 'book-outline', title: 'Общие правила', text: 'Ориентиры по поступлению, визе и стоимости', table: 'admission_rules' },
   { href: '/admin/visa-sections', icon: 'airplane-outline', title: 'Виза: шаги', text: 'Пошаговая инструкция по визе и переезду', table: 'visa_sections' },
   { href: '/admin/visa-missions', icon: 'flag-outline', title: 'Виза: посольства', text: 'Куда подавать по странам проживания', table: 'visa_missions' },
+  { href: '/admin/consultations', icon: 'mail-unread-outline', title: 'Заявки на консультацию', text: 'Форма «Получить помощь с поступлением»' },
   { href: '/admin/chats', icon: 'chatbubbles-outline', title: 'Чаты со студентами', text: 'Вопросы студентов и файлы' },
   { href: '/admin/documents', icon: 'document-text-outline', title: 'Документы студентов', text: 'Проверка загруженных документов' },
   { href: '/admin/applications', icon: 'school-outline', title: 'Заявки студентов', text: 'Поступления, этапы, комментарии и задачи' },

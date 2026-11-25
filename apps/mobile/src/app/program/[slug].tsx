@@ -128,6 +128,15 @@ export default function ProgramScreen() {
           )}
         </Section>
 
+        <Button
+          title="Нужна помощь с этой программой?"
+          icon="people-outline"
+          variant="outline"
+          onPress={() => router.push({ pathname: '/help', params: { program: p.slug } } as never)}
+          style={{ marginTop: spacing.xl }}
+          testID="program-help"
+        />
+
         <SourceNote meta={p} onOpen={openOfficial} />
       </ScrollView>
     </View>

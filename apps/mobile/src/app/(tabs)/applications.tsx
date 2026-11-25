@@ -10,6 +10,7 @@ import { Button, EmptyState, ErrorState, LoadingState, Notice, Section, ui } fro
 import { ProgramCard, UniversityCard } from '../../components/cards';
 import { ApplicationCard } from '../../components/ApplicationCard';
 import { CabinetLinks } from '../../components/CabinetLinks';
+import { useCompare } from '../../lib/compare';
 import { spacing } from '../../theme';
 import { t } from '../../i18n';
 
@@ -72,6 +73,7 @@ export default function ApplicationsScreen() {
   const catalog = useCatalog();
   const fav = useFavorites();
   const auth = useAuth();
+  const compare = useCompare();
   const [refreshKey, setRefreshKey] = useState(0);
 
   if (catalog.status === 'loading') return <LoadingState />;
@@ -120,6 +122,18 @@ export default function ApplicationsScreen() {
                 <Text style={ui.muted}>{s.applications.emptyUniversities}</Text>
               </View>
             )}
+            {universities.length >= 2 ? (
+              <Button
+                title={universities.length > 4 ? 'Сравнить первые 4 избранных вуза' : 'Сравнить избранные вузы'}
+                icon="git-compare-outline"
+                variant="outline"
+                onPress={() => {
+                  compare.setAll(universities.map((u) => u.id));
+                  router.push('/compare' as never);
+                }}
+                testID="compare-favorites"
+              />
+            ) : null}
           </Section>
           <Section title={`${s.applications.favPrograms} (${programs.length})`}>
             {programs.length ? (

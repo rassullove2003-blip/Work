@@ -9,3 +9,4 @@ export * from './import/apply';
 export * from './applications';
 export * from './documents';
 export * from './import/google';
+export * from './compare';

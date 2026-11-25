@@ -45,6 +45,7 @@ export function CabinetLinks() {
       <MenuRow icon="chatbubbles-outline" title="Чат с куратором" text="Вопросы, файлы и ответы куратора" count={n.unreadChat} href="/chat" testID="open-chat" />
       <MenuRow icon="document-text-outline" title="Мои документы" text="Загрузка и проверка документов" href="/documents" testID="open-documents" />
       <MenuRow icon="alarm-outline" title="Напоминания о сроках" text="Дедлайны, о которых мы напомним" href="/reminders" testID="open-reminders" />
+      <MenuRow icon="people-outline" title="Помощь с поступлением" text="Заявка на консультацию" href="/help" testID="open-help" />
       <MenuRow icon="notifications-outline" title="Уведомления" count={n.unread} href="/notifications" testID="open-notifications" />
     </View>
   );

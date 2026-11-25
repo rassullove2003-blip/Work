@@ -4,7 +4,8 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { cityName, regionName, UNIVERSITY_TYPES } from '@uniitalia/shared';
 import { useCatalog } from '../../lib/catalog';
 import { useFavorites } from '../../lib/favorites';
-import { openOfficial } from '../../lib/links';
+import { notify, openOfficial } from '../../lib/links';
+import { useCompare } from '../../lib/compare';
 import { Button, EmptyState, ErrorState, InfoRow, LoadingState, Notice, ScreenHeader, Section, SourceNote, ui, VerificationBadge } from '../../components/ui';
 import { FavoriteButton, ProgramCard, ScholarshipCard, UniversityAvatar } from '../../components/cards';
 import { colors, font, spacing } from '../../theme';
@@ -15,6 +16,7 @@ export default function UniversityScreen() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const catalog = useCatalog();
   const fav = useFavorites();
+  const compare = useCompare();
 
   if (catalog.status === 'loading') return <LoadingState />;
   if (catalog.status === 'error') return <ErrorState onRetry={catalog.reload} details={catalog.error} />;
@@ -64,6 +66,16 @@ export default function UniversityScreen() {
               variant={isFav ? 'secondary' : 'outline'}
               onPress={() => fav.toggleUniversity(u.id)}
               testID="uni-fav-button"
+            />
+            <Button
+              title={compare.has(u.id) ? 'В сравнении — открыть' : 'Сравнить с другими'}
+              icon="git-compare-outline"
+              variant={compare.has(u.id) ? 'secondary' : 'outline'}
+              onPress={() => {
+                if (compare.has(u.id)) return router.push('/compare' as never);
+                if (!compare.toggle(u.id)) notify('Можно сравнить до 4 вузов', 'Уберите один из вузов на экране сравнения.');
+              }}
+              testID="uni-compare-button"
             />
             {u.website ? <Button title={s.common.officialSite} icon="open-outline" onPress={() => openOfficial(u.website)} /> : null}
           </View>

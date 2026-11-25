@@ -9,6 +9,7 @@ import { StaffProvider } from '../lib/staff';
 import { NotificationsProvider } from '../lib/notifications';
 import { RemindersProvider } from '../lib/reminders';
 import { PushRegistrar } from '../lib/push';
+import { CompareProvider } from '../lib/compare';
 import { colors } from '../theme';
 
 export default function RootLayout() {
@@ -21,6 +22,7 @@ export default function RootLayout() {
         <CatalogProvider>
           <FavoritesProvider>
             <FiltersProvider>
+            <CompareProvider>
               <StatusBar style="dark" />
               <PushRegistrar />
               <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.surface } }}>
@@ -28,6 +30,7 @@ export default function RootLayout() {
                 <Stack.Screen name="filters" options={{ presentation: 'modal' }} />
                 <Stack.Screen name="auth" options={{ presentation: 'modal' }} />
               </Stack>
+            </CompareProvider>
             </FiltersProvider>
           </FavoritesProvider>
         </CatalogProvider>
