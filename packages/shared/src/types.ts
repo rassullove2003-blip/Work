@@ -37,6 +37,10 @@ export interface University extends VerificationMeta {
   image_url: string | null;
   featured: boolean;
   is_demo: boolean;
+  /** Координаты для карты (OpenStreetMap); geo_precision: здание вуза или центр города. */
+  latitude?: number | null;
+  longitude?: number | null;
+  geo_precision?: 'building' | 'city' | null;
 }
 
 export interface Program extends VerificationMeta {

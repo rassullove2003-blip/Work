@@ -13,6 +13,17 @@ export const universityFields: FieldDef[] = [
   { name: 'public_private', label: 'Тип', type: 'select', required: true, options: [{ value: 'public', label: 'Государственный' }, { value: 'private', label: 'Частный' }] },
   { name: 'website', label: 'Официальный сайт', type: 'url', placeholder: 'https://…' },
   { name: 'address', label: 'Адрес', type: 'text' },
+  { name: 'latitude', label: 'Широта (для карты)', type: 'number', hint: 'Например 45.4642. Возьмите из OpenStreetMap или карт: правый клик → координаты.' },
+  { name: 'longitude', label: 'Долгота (для карты)', type: 'number', hint: 'Например 9.1900.' },
+  {
+    name: 'geo_precision',
+    label: 'Точность точки на карте',
+    type: 'select',
+    options: [
+      { value: 'building', label: 'Здание / кампус вуза' },
+      { value: 'city', label: 'Центр города (примерно)' },
+    ],
+  },
   { name: 'logo_url', label: 'Логотип', type: 'image', folder: 'logos', hint: 'Только изображения, на которые есть право использования.' },
   { name: 'image_url', label: 'Фотография', type: 'image', folder: 'photos', hint: 'Только изображения, на которые есть право использования.' },
   { name: 'description_ru', label: 'Описание на русском', type: 'multiline' },

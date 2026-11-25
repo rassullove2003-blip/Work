@@ -77,6 +77,9 @@ export default function UniversityScreen() {
               }}
               testID="uni-compare-button"
             />
+            {u.latitude != null ? (
+              <Button title="Показать на карте" icon="map-outline" variant="outline" onPress={() => router.push({ pathname: '/map', params: { focus: u.slug } } as never)} testID="uni-map-button" />
+            ) : null}
             {u.website ? <Button title={s.common.officialSite} icon="open-outline" onPress={() => openOfficial(u.website)} /> : null}
           </View>
           {fav.error ? <Text style={{ color: colors.danger }}>{fav.error}</Text> : null}

@@ -68,6 +68,7 @@ export default function HomeScreen() {
     { label: 'Правила поступления', icon: 'book-outline', onPress: () => router.push('/rules' as never) },
     { label: 'Виза', icon: 'airplane-outline', onPress: () => router.push('/visa' as never) },
     { label: 'Сравнение вузов', icon: 'git-compare-outline', onPress: () => router.push('/compare' as never) },
+    { label: 'Карта вузов', icon: 'map-outline', onPress: () => router.push('/map' as never) },
   ];
 
   return (

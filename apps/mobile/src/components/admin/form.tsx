@@ -75,7 +75,7 @@ export function toDb(f: FieldDef, v: unknown): unknown {
   if (f.type === 'multiselect') return v;
   const s = typeof v === 'string' ? v.trim() : v;
   if (s === '' || s == null) return null;
-  if (f.type === 'number') return Number(s);
+  if (f.type === 'number') return Number(String(s).replace(',', '.'));
   // Дата хранится как конец дня; отображается по первым 10 символам.
   if (f.type === 'date') return `${s}T23:59:00Z`;
   return s;
@@ -93,7 +93,7 @@ export function validate(fields: FieldDef[], values: Values): Record<string, str
     if (f.type === 'url' && !/^https?:\/\/\S+$/.test(s)) e[f.name] = 'Ссылка должна начинаться с https://';
     if (f.type === 'date' && (!DATE_RE.test(s) || isNaN(Date.parse(s)))) e[f.name] = 'Формат: 2027-03-31';
     if (f.type === 'year' && !YEAR_RE.test(s)) e[f.name] = 'Формат: 2026/2027';
-    if (f.type === 'number' && !/^\d+(\.\d+)?$/.test(s)) e[f.name] = 'Введите число';
+    if (f.type === 'number' && !/^\d+([.,]\d+)?$/.test(s)) e[f.name] = 'Введите число';
   }
   if (values.verification_status === 'verified' && (!values.source_url || !values.verified_at)) {
     e.verification_status = 'Для «Проверено» укажите источник и дату проверки';
